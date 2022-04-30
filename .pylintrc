@@ -1,0 +1,2 @@
+[MESSAGES CONTROL]
+disable=fixme,import-error,invalid-name,line-too-long,missing-function-docstring,missing-module-docstring,redefined-outer-name,unused-argument

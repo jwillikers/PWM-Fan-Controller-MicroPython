@@ -1,0 +1,16 @@
+name: CI
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: ibiqlik/action-yamllint@v3
+      - uses: psf/black@stable
+      - uses: cclauss/GitHub-Action-for-pylint@0.7.0

@@ -1,0 +1,250 @@
+= PWM Fan Controller MicroPython
+Jordan Williams <jordan@jwillikers.com>
+:experimental:
+:icons: font
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:important-caption: :heavy_exclamation_mark:
+:caution-caption: :fire:
+:warning-caption: :warning:
+endif::[]
+:Adafruit-QT-Py-RP2040: https://www.adafruit.com/product/4900[Adafruit QT Py RP2040]
+:Asciidoctor_: https://asciidoctor.org/[Asciidoctor]
+:Fedora: https://getfedora.org/[Fedora]
+:Fedora-Silverblue: https://silverblue.fedoraproject.org/[Fedora Silverblue]
+:fish: https://fishshell.com/[fish]
+:Git: https://git-scm.com/[Git]
+:Linux: https://www.linuxfoundation.org/[Linux]
+:MicroPython: https://micropython.org/[MicroPython]
+:Noctua-NF-P12-redux-1700-PWM-Fan: https://noctua.at/en/nf-p12-redux-1700-pwm[Noctua NF-P12 redux-1700 PWM Fan]
+:pip-tools: https://github.com/jazzband/pip-tools[pip-tools]
+:pipkin: https://github.com/aivarannamaa/pipkin[pipkin]
+:pre-commit: https://pre-commit.com/[pre-commit]
+:Python: https://www.python.org/[Python]
+
+image:https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml/badge.svg?branch=main["Build Status", link="https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml"]
+image:https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white[pre-commit, link=https://github.com/pre-commit/pre-commit]
+
+A simple PWM fan controller using the {Adafruit-QT-Py-RP2040}, written in {MicroPython}.
+
+// ifdef::env-github[]
+// ++++
+// <p align="center">
+//   <img  alt="Humidity Sensor" src="pics/Humidity Sensor Top.jpg?raw=true"/>
+// </p>
+// <p align="center">
+//   <img  alt="Humidity Sensor Demo" src="pics/Humidity Sensor Demo.gif?raw=true"/>
+// </p>
+// ++++
+// endif::[]
+
+// ifndef::env-github[]
+// image::pics/Humidity Sensor Top.jpg[Humidity Sensor, align=center]
+// image::pics/Humidity Sensor Demo.gif[Humidity Sensor Demo, align=center]
+// endif::[]
+
+== Hardware
+
+All the hardware components in my particular build are enumerated here.
+
+.Fan Controller Components
+* {Adafruit-QT-Py-RP2040}
+* https://www.adafruit.com/product/64[Half-size breadboard]
+* {Noctua-NF-P12-redux-1700-PWM-Fan}
+* https://www.adafruit.com/product/759[Premium Male/Male Jumper Wires - 40 x 3" (75mm)]
+* USB-C Power Supply for the microcontroller
+
+Programming will require a USB-C cable and a computer.
+
+== How it Works
+
+This is a dead-simple PWM fan controller that simply lowers the speed of the {Noctua-NF-P12-redux-1700-PWM-Fan} to a quiet 40%.
+The microcontroller simply sets the fan speed.
+The fan setup might evolve in the future to take into account temperature sensing and dynamic speed adjustment.
+
+== Shortcomings
+
+. MicroPython does not yet support deep sleep for the RP2040 board.
+Deep sleep after setting the PWM would conserve energy.
+
+== Getting Started
+
+The instructions here setup the software for the QT Py RP2040.
+It is assumed that you are on and familiar with Linux and using MicroPython on microcontrollers.
+{Fedora-Silverblue} 36 is used as the reference operating system and the shell used is {fish}.
+
+[TIP]
+====
+To access the serial connection to the QT Py RP2040 without requiring superuser privileges, add your user to the `dialout` group.
+
+[source,sh]
+----
+sudo usermod -a -G dialout $USER
+----
+
+Now restart for the change to take effect.
+====
+
+. First, configure the QT Py RP2040 for MicroPython by installing the latest version of MicroPython for the board.
+The CircuitPython bootloader for the QT Py RP2040 is available on the https://micropython.org/download/ADAFRUIT_QTPY_RP2040/[QT Py RP2040 MicroPython Download page].
+At the time of writing, the latest stable version of MicroPython is version 1.18.
++
+[source,sh]
+----
+wget -qLP ~/Downloads https://micropython.org/resources/firmware/ADAFRUIT_QTPY_RP2040-20220117-v1.18.uf2
+----
+
+. Hold down the button marked _bootsel_ on the QT Py RP2040 while plugging it in to your computer with a USB-C cable.
+The RP2040 should automatically be mounted as a disk on your computer.
+In my case, it has been mounted at `/run/media/jordan/RPI-RP2`.
+The lsblk command can be used to find where it has been mounted
++
+[source,sh]
+----
+lsblk
+----
+
+. Now copy over the UF2 bootloader to the RP2040.
++
+[source,sh]
+----
+cp ~/Downloads/ADAFRUIT_QTPY_RP2040-20220117-v1.18.uf2 /run/media/$USER/RPI-RP2
+----
+
+. Wait for the file to finish copying.
+When it is done, a serial console will become available which provides access to the QT Py RP2040.
+This serial port can be found with the `dmesg` command as follows.
++
+--
+[source,sh]
+----
+dmesg | tail
+[  443.276661] usb 1-4.3.2: reset high-speed USB device number 22 using xhci_hcd
+[ 2180.628239] usb 1-3.2: USB disconnect, device number 10
+[ 4242.965271] usb 1-3.1: USB disconnect, device number 6
+[ 4245.247932] usb 1-3.1: new full-speed USB device number 23 using xhci_hcd
+[ 4245.387678] usb 1-3.1: New USB device found, idVendor=2e8a, idProduct=0005, bcdDevice= 1.00
+[ 4245.387681] usb 1-3.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[ 4245.387682] usb 1-3.1: Product: Board in FS mode
+[ 4245.387683] usb 1-3.1: Manufacturer: MicroPython
+[ 4245.387684] usb 1-3.1: SerialNumber: df6050788b1e1c2e
+[ 4245.397678] cdc_acm 1-3.1:1.0: ttyACM0: USB ACM device
+----
+
+`ttyACM0` in the preceding output indicates the device node.
+This device resides under `/dev` on the filesystem.
+Note the name of the device shown in your output, since it will be used copy the source code to the QT Py's onboard filesystem.
+--
+
+
+. Clone this project's repository.
++
+[source,sh]
+----
+git clone https://github.com/jwillikers/fan-controller.git
+----
+
+. Change into the project directory.
++
+[source,sh]
+----
+cd fan-controller
+----
+
+. Create a virtual environment for the project.
++
+[source,sh]
+----
+python -m venv .env
+----
+
+. Activate the virtual environment.
++
+[source,sh]
+----
+source .env/bin/activate.fish
+----
+
+. Install the development dependencies.
++
+[source,sh]
+----
+pip install -r requirements-dev.txt
+----
+
+. Download the MicroPython `pyboard.py` script for accessing the QT Py RP2040.
++
+[source,sh]
+----
+wget -L https://raw.githubusercontent.com/micropython/micropython/master/tools/pyboard.py
+----
+
+. Copy the `main.py` source code file to the QT Py RP2040.
++
+[source,sh]
+----
+python pyboard.py --device /dev/ttyACM0 -f cp main.py :
+----
+
+. Once the previous command finishes, you may unplug the board.
+
+== Development
+
+It's recommended to create a virtual environment for the project and to use the provided {pre-commit} checks when developing.
+
+. Install the Git hooks for pre-commit.
+.
++
+[source,sh]
+----
+pre-commit install
+----
+
+. The pinned development packages in the `requirements-dev.txt` file can be upgraded with the `pip-compile` command from the {pip-tools} package.
++
+[,sh]
+----
+pip-compile \
+  --allow-unsafe \
+  --generate-hashes \
+  --reuse-hashes \
+  --upgrade \
+  requirements-dev.in
+----
+
+== Documentation
+
+.MicroPython Documentation
+* https://docs.micropython.org/en/latest/rp2/quickref.html#pwm-pulse-width-modulation[Quick reference for the RP2: PWM (pulse width modulation)]
+
+== Contributing
+
+Contributions in the form of issues, feedback, and even pull requests are welcome.
+Make sure to adhere to the project's link:CODE_OF_CONDUCT.adoc[Code of Conduct].
+
+== Open Source Software
+
+This project is built on the hard work of countless open source contributors.
+Several of these projects are enumerated below.
+
+* {Asciidoctor_}
+* {MicroPython}
+* {Git}
+* {Linux}
+* {pre-commit}
+* {Python}
+
+== Code of Conduct
+
+Refer to the project's link:CODE_OF_CONDUCT.adoc[Code of Conduct] for details.
+
+== License
+
+This repository is licensed under the https://www.gnu.org/licenses/gpl-3.0.html[GPLv3], a copy of which is provided link:LICENSE.adoc[here].
+
+© 2022 Jordan Williams
+
+== Authors
+
+mailto:{email}[{author}]
