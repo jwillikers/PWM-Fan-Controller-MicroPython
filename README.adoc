@@ -232,6 +232,7 @@ Several of these projects are enumerated below.
 * {MicroPython}
 * {Git}
 * {Linux}
+* {pip-tools}
 * {pre-commit}
 * {Python}
 
