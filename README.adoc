@@ -134,7 +134,7 @@ dmesg | tail
 
 `ttyACM0` in the preceding output indicates the device node.
 This device resides under `/dev` on the filesystem.
-Note the name of the device shown in your output, since it will be used copy the source code to the QT Py's onboard filesystem.
+Note the name of the device shown in your output, since it will be used to copy the source code to the QT Py's on-board filesystem.
 --
 
 
