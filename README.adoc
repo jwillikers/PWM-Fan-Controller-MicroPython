@@ -64,7 +64,7 @@ This is a dead-simple PWM fan controller that simply lowers the speed of the {No
 The microcontroller simply sets the fan speed and then does nothing.
 The fan setup might evolve in the future to take into account temperature sensing and dynamic speed adjustment.
 
-The 3.3V microcontrollers used here require a logic-level shifter to boost the PWM signal up to 5V for the fan.
+The 3.3V microcontroller used here requires a logic-level shifter to boost the PWM signal up to 5V for the fan.
 I use the 74AHCT125 to perform the logic-level conversion, using pin #40, `VBUS`, to provide the 5V reference voltage.
 
 The Raspberry Pi Pico draws a steady 20.78 mA of power.
