@@ -7,9 +7,12 @@ FORTY_PERCENT_DUTY_CYCLE = (MAX_DUTY_CYCLE * 2) // 5
 PWM_FAN_FREQUENCY = 25_000
 
 # For PWM use GPIO pin #29, which is pin A0 on the Adafruit QT Py RP2040.
-QT_PY_RP2040_PIN_A0 = 29
+# PWM_PIN = 29
 
-pwm0 = PWM(Pin(QT_PY_RP2040_PIN_A0))
+# For PWM use GPIO pin #15, which is pin #20 on the Raspberry Pi Pico.
+PWM_PIN = 15
+
+pwm0 = PWM(Pin(PWM_PIN))
 
 pwm0.freq(PWM_FAN_FREQUENCY)
 

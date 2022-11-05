@@ -9,7 +9,6 @@ ifdef::env-github[]
 :caution-caption: :fire:
 :warning-caption: :warning:
 endif::[]
-:Adafruit-QT-Py-RP2040: https://www.adafruit.com/product/4900[Adafruit QT Py RP2040]
 :Asciidoctor_: https://asciidoctor.org/[Asciidoctor]
 :Fedora: https://getfedora.org/[Fedora]
 :Fedora-Silverblue: https://silverblue.fedoraproject.org/[Fedora Silverblue]
@@ -22,11 +21,12 @@ endif::[]
 :pipkin: https://github.com/aivarannamaa/pipkin[pipkin]
 :pre-commit: https://pre-commit.com/[pre-commit]
 :Python: https://www.python.org/[Python]
+:Raspberry-Pi-Pico: https://www.raspberrypi.com/products/raspberry-pi-pico/[Raspberry Pi Pico]
 
 image:https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml/badge.svg?branch=main["Build Status", link="https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml"]
 image:https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white[pre-commit, link=https://github.com/pre-commit/pre-commit]
 
-A simple PWM fan controller using the {Adafruit-QT-Py-RP2040}, written in {MicroPython}.
+A simple PWM fan controller for the {Raspberry-Pi-Pico}, written in {MicroPython}.
 
 // ifdef::env-github[]
 // ++++
@@ -49,19 +49,29 @@ A simple PWM fan controller using the {Adafruit-QT-Py-RP2040}, written in {Micro
 All the hardware components in my particular build are enumerated here.
 
 .Fan Controller Components
-* {Adafruit-QT-Py-RP2040}
+* {Raspberry-Pi-Pico}
 * https://www.adafruit.com/product/64[Half-size breadboard]
 * {Noctua-NF-P12-redux-1700-PWM-Fan}
+* https://www.adafruit.com/product/1787[74AHCT125 - Quad Level-Shifter]
 * https://www.adafruit.com/product/759[Premium Male/Male Jumper Wires - 40 x 3" (75mm)]
-* USB-C Power Supply for the microcontroller
+* micro USB Power Supply for the microcontroller
 
-Programming will require a USB-C cable and a computer.
+Programming will require a micro USB cable and a computer.
 
 == How it Works
 
 This is a dead-simple PWM fan controller that simply lowers the speed of the {Noctua-NF-P12-redux-1700-PWM-Fan} to a quiet 40%.
-The microcontroller simply sets the fan speed.
+The microcontroller simply sets the fan speed and then does nothing.
 The fan setup might evolve in the future to take into account temperature sensing and dynamic speed adjustment.
+
+The 3.3V microcontrollers used here require a logic-level shifter to boost the PWM signal up to 5V for the fan.
+I use the 74AHCT125 to perform the logic-level conversion, using pin #40, `VBUS`, to provide the 5V reference voltage.
+
+The Raspberry Pi Pico draws a steady 20.78 mA of power.
+If you're concerned about power usage or type safety, then you might be interested in my Rust-based implementation, https://github.com/jwillikers/PWM-Fan-Controller[PWM Fan Controller].
+The Rust-based version sips a bit less power on the Pico, 2.07 mA.
+This is probably mostly due to the fact that the Rust-based version runs entirely off the low-power Ring Oscillator clock instead of the Crystal Oscillator.
+If you know any ways to improve the energy usage, feel free to get in touch or contribute!
 
 == Shortcomings
 
@@ -70,32 +80,23 @@ Deep sleep after setting the PWM would conserve energy.
 
 == Getting Started
 
-The instructions here setup the software for the QT Py RP2040.
+The instructions here setup the software for the Raspberry Pi Pico.
 It is assumed that you are on and familiar with Linux and using MicroPython on microcontrollers.
-{Fedora-Silverblue} 36 is used as the reference operating system and the shell used is {fish}.
+{Fedora-Silverblue} 37 is used as the reference operating system and the shell used is {fish}.
 
 [TIP]
 ====
-To access the serial connection to the QT Py RP2040 without requiring superuser privileges, add your user to the `dialout` group.
+To access the serial connection to the Raspberry Pi Pico without requiring superuser privileges, add your user to the `dialout` group.
 
 [source,sh]
 ----
-sudo usermod -a -G dialout $USER
+sudo usermod -aG dialout $USER
 ----
 
 Now restart for the change to take effect.
 ====
 
-. First, configure the QT Py RP2040 for MicroPython by installing the latest version of MicroPython for the board.
-The CircuitPython bootloader for the QT Py RP2040 is available on the https://micropython.org/download/ADAFRUIT_QTPY_RP2040/[QT Py RP2040 MicroPython Download page].
-At the time of writing, the latest stable version of MicroPython is version 1.18.
-+
-[source,sh]
-----
-wget -qLP ~/Downloads https://micropython.org/resources/firmware/ADAFRUIT_QTPY_RP2040-20220117-v1.18.uf2
-----
-
-. Hold down the button marked _bootsel_ on the QT Py RP2040 while plugging it in to your computer with a USB-C cable.
+. Hold down the button marked _BOOTSEL_ on the board while plugging it in to your computer with a micro USB cable.
 The RP2040 should automatically be mounted as a disk on your computer.
 In my case, it has been mounted at `/run/media/jordan/RPI-RP2`.
 The lsblk command can be used to find where it has been mounted
@@ -105,15 +106,16 @@ The lsblk command can be used to find where it has been mounted
 lsblk
 ----
 
-. Now copy over the UF2 bootloader to the RP2040.
+. Download and install MicroPython using the latest stable version of MicroPython, version 1.19.1 at the time of writing.
+The MicroPython firmware for the Raspberry Pi Pico is available on the https://micropython.org/download/rp2-pico/[Raspberry Pi Pico MicroPython Download page].
 +
 [source,sh]
 ----
-cp ~/Downloads/ADAFRUIT_QTPY_RP2040-20220117-v1.18.uf2 /run/media/$USER/RPI-RP2
+wget -qLP /run/media/$USER/RPI-RP2 https://micropython.org/resources/firmware/rp2-pico-20220618-v1.19.1.uf2
 ----
 
 . Wait for the file to finish copying.
-When it is done, a serial console will become available which provides access to the QT Py RP2040.
+When it is done, a serial console will become available which provides access to the board.
 This serial port can be found with the `dmesg` command as follows.
 +
 --
@@ -134,22 +136,21 @@ dmesg | tail
 
 `ttyACM0` in the preceding output indicates the device node.
 This device resides under `/dev` on the filesystem.
-Note the name of the device shown in your output, since it will be used to copy the source code to the QT Py's on-board filesystem.
+Note the name of the device shown in your output, since it will be used to copy the source code to the microcontroller's on-board filesystem.
 --
-
 
 . Clone this project's repository.
 +
 [source,sh]
 ----
-git clone https://github.com/jwillikers/fan-controller.git
+git clone https://github.com/jwillikers/PWM-Fan-Controller-MicroPython.git
 ----
 
 . Change into the project directory.
 +
 [source,sh]
 ----
-cd fan-controller
+cd PWM-Fan-Controller-MicroPython
 ----
 
 . Create a virtual environment for the project.
@@ -173,14 +174,14 @@ source .env/bin/activate.fish
 pip install -r requirements-dev.txt
 ----
 
-. Download the MicroPython `pyboard.py` script for accessing the QT Py RP2040.
+. Download the MicroPython `pyboard.py` script for accessing the microcontroller.
 +
 [source,sh]
 ----
 wget -L https://raw.githubusercontent.com/micropython/micropython/master/tools/pyboard.py
 ----
 
-. Copy the `main.py` source code file to the QT Py RP2040.
+. Copy the `main.py` source code file to the microcontroller.
 +
 [source,sh]
 ----
@@ -213,10 +214,14 @@ pip-compile \
   requirements-dev.in
 ----
 
-== Documentation
+== References
 
-.MicroPython Documentation
-* https://docs.micropython.org/en/latest/rp2/quickref.html#pwm-pulse-width-modulation[Quick reference for the RP2: PWM (pulse width modulation)]
+* https://www.ti.com/lit/ds/symlink/sn74ahct125.pdf[1787AHC125 Datasheet]
+* https://en.wikipedia.org/wiki/Computer_fan_control#Pulse-width_modulation[Computer Fan Control: Pulse-width modulation]
+* https://docs.micropython.org/en/latest/rp2/quickref.html#pwm-pulse-width-modulation[MicroPython Quick reference for the RP2: PWM (pulse width modulation)]
+* https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf[RP2040 Datasheet]
+* https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html[Raspberry Pi Pico Documentation]
+* https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files[Raspberry Pi Pico Pinout]
 
 == Contributing
 
