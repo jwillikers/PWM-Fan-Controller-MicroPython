@@ -1,16 +1,22 @@
-name: CI
 on:  # yamllint disable-line rule:truthy
   pull_request:
-  push:
-    branches:
-      - main
+    branches: ["main"]
+
+permissions:
+  contents: read
 
 jobs:
-  check:
-    name: Check
+  yamllint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: ibiqlik/action-yamllint@v3
-      - uses: psf/black@stable
-      - uses: cclauss/GitHub-Action-for-pylint@0.7.0
+      - uses: actions/checkout@v4
+      - uses: karancode/yamllint-github-action@v2.1.1
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: chartboost/ruff-action@v1

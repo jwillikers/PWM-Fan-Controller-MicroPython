@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.2.0
+    rev: v4.5.0
     hooks:
       - id: check-byte-order-marker
       - id: check-executables-have-shebangs
@@ -9,14 +9,11 @@ repos:
       - id: check-yaml
       - id: end-of-file-fixer
       - id: mixed-line-ending
+      - id: pretty-format-json
+        exclude: ^.vscode/.*\.json$
       - id: trailing-whitespace
-  - repo: https://github.com/psf/black
-    rev: 22.3.0
-    hooks:
-      - id: black
-        language_version: python3
   - repo: https://github.com/jazzband/pip-tools
-    rev: 6.6.0
+    rev: 7.4.0
     hooks:
       - id: pip-compile
         name: pip-compile requirements-dev.in
@@ -26,12 +23,13 @@ repos:
           - --reuse-hashes
           - requirements-dev.in
         files: ^requirements-dev\.(in|txt)$
-  # todo Enable pylint.
-  # - repo: https://github.com/PyCQA/pylint
-  #   rev: v2.13.5
-  #   hooks:
-  #     - id: pylint
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.2.2
+    hooks:
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
   - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.26.3
+    rev: v1.35.1
     hooks:
       - id: yamllint
