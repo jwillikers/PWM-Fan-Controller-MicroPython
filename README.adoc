@@ -20,7 +20,7 @@ endif::[]
 :Python: https://www.python.org/[Python]
 :Raspberry-Pi-Pico: https://www.raspberrypi.com/products/raspberry-pi-pico/[Raspberry Pi Pico]
 
-image:https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml/badge.svg?branch=main["CI", link="https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml"]
+image:https://github.com/jwillikers/PWM-Fan-Controller-MicroPython/actions/workflows/ci.yml/badge.svg["CI", link="https://github.com/jwillikers/PWM-Fan-Controller-MicroPython/actions/workflows/ci.yml"]
 image:https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white[pre-commit, link=https://github.com/pre-commit/pre-commit]
 image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json[Ruff, link=https://github.com/astral-sh/ruff]
 
