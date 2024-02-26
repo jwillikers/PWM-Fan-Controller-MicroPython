@@ -198,7 +198,6 @@ Several of these projects are enumerated below.
 
 * {Asciidoctor_}
 * {MicroPython}
-* {Git}
 * {Linux}
 * {pip-tools}
 * {pre-commit}
