@@ -1,6 +1,5 @@
-black
 pip-tools
 pre-commit
-pylint
 pyserial
+ruff
 yamllint

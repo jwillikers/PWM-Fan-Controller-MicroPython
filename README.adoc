@@ -10,11 +10,8 @@ ifdef::env-github[]
 :warning-caption: :warning:
 endif::[]
 :Asciidoctor_: https://asciidoctor.org/[Asciidoctor]
-:Fedora: https://getfedora.org/[Fedora]
-:Fedora-Silverblue: https://silverblue.fedoraproject.org/[Fedora Silverblue]
-:fish: https://fishshell.com/[fish]
-:Git: https://git-scm.com/[Git]
 :Linux: https://www.linuxfoundation.org/[Linux]
+:just: https://github.com/casey/just[just]
 :MicroPython: https://micropython.org/[MicroPython]
 :Noctua-NF-P12-redux-1700-PWM-Fan: https://noctua.at/en/nf-p12-redux-1700-pwm[Noctua NF-P12 redux-1700 PWM Fan]
 :pip-tools: https://github.com/jazzband/pip-tools[pip-tools]
@@ -23,8 +20,9 @@ endif::[]
 :Python: https://www.python.org/[Python]
 :Raspberry-Pi-Pico: https://www.raspberrypi.com/products/raspberry-pi-pico/[Raspberry Pi Pico]
 
-image:https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml/badge.svg?branch=main["Build Status", link="https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml"]
+image:https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml/badge.svg?branch=main["CI", link="https://github.com/jwillikers/pwm-fan-controller-micropython/actions/workflows/ci.yml"]
 image:https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white[pre-commit, link=https://github.com/pre-commit/pre-commit]
+image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json[Ruff, link=https://github.com/astral-sh/ruff]
 
 A simple PWM fan controller for the {Raspberry-Pi-Pico}, written in {MicroPython}.
 
@@ -82,36 +80,29 @@ Deep sleep after setting the PWM would conserve energy.
 
 The instructions here setup the software for the Raspberry Pi Pico.
 It is assumed that you are on and familiar with Linux and using MicroPython on microcontrollers.
-{Fedora-Silverblue} 37 is used as the reference operating system and the shell used is {fish}.
 
 [TIP]
 ====
 To access the serial connection to the Raspberry Pi Pico without requiring superuser privileges, add your user to the `dialout` group.
 
-[source,sh]
+[,sh]
 ----
-sudo usermod -aG dialout $USER
+sudo usermod --append --groups dialout $USER
 ----
 
 Now restart for the change to take effect.
 ====
 
+. Install {just} by following the instructions in the https://github.com/casey/just?tab=readme-ov-file#installation[installation section].
+
 . Hold down the button marked _BOOTSEL_ on the board while plugging it in to your computer with a micro USB cable.
 The RP2040 should automatically be mounted as a disk on your computer.
-In my case, it has been mounted at `/run/media/jordan/RPI-RP2`.
-The lsblk command can be used to find where it has been mounted
-+
-[source,sh]
-----
-lsblk
-----
 
-. Download and install MicroPython using the latest stable version of MicroPython, version 1.19.1 at the time of writing.
-The MicroPython firmware for the Raspberry Pi Pico is available on the https://micropython.org/download/rp2-pico/[Raspberry Pi Pico MicroPython Download page].
+. To download and install MicroPython, run `just install-micropython`.
 +
-[source,sh]
+[,sh]
 ----
-wget -qLP /run/media/$USER/RPI-RP2 https://micropython.org/resources/firmware/rp2-pico-20220618-v1.19.1.uf2
+just install-micropython
 ----
 
 . Wait for the file to finish copying.
@@ -119,7 +110,7 @@ When it is done, a serial console will become available which provides access to
 This serial port can be found with the `dmesg` command as follows.
 +
 --
-[source,sh]
+[,sh]
 ----
 dmesg | tail
 [  443.276661] usb 1-4.3.2: reset high-speed USB device number 22 using xhci_hcd
@@ -141,77 +132,49 @@ Note the name of the device shown in your output, since it will be used to copy 
 
 . Clone this project's repository.
 +
-[source,sh]
+[,sh]
 ----
 git clone https://github.com/jwillikers/PWM-Fan-Controller-MicroPython.git
 ----
 
 . Change into the project directory.
 +
-[source,sh]
+[,sh]
 ----
 cd PWM-Fan-Controller-MicroPython
 ----
 
-. Create a virtual environment for the project.
+. Run `just install` to install everything to the Pico.
 +
-[source,sh]
+[,sh]
 ----
-python -m venv .env
-----
-
-. Activate the virtual environment.
-+
-[source,sh]
-----
-source .env/bin/activate.fish
-----
-
-. Install the development dependencies.
-+
-[source,sh]
-----
-pip install -r requirements-dev.txt
-----
-
-. Download the MicroPython `pyboard.py` script for accessing the microcontroller.
-+
-[source,sh]
-----
-wget -L https://raw.githubusercontent.com/micropython/micropython/master/tools/pyboard.py
-----
-
-. Copy the `main.py` source code file to the microcontroller.
-+
-[source,sh]
-----
-python pyboard.py --device /dev/ttyACM0 -f cp main.py :
+just install
 ----
 
 . Once the previous command finishes, you may unplug the board.
 
 == Development
 
-It's recommended to create a virtual environment for the project and to use the provided {pre-commit} checks when developing.
-
-. Install the Git hooks for pre-commit.
-.
-+
-[source,sh]
-----
-pre-commit install
-----
-
-. The pinned development packages in the `requirements-dev.txt` file can be upgraded with the `pip-compile` command from the {pip-tools} package.
+. Run `just init-dev` to initialize the virtual environment for development.
+This will install all of the necessary dependencies and the {pre-commit} hooks.
 +
 [,sh]
 ----
-pip-compile \
-  --allow-unsafe \
-  --generate-hashes \
-  --reuse-hashes \
-  --upgrade \
-  requirements-dev.in
+just init-dev
+----
+
+. To update dependencies, run `just update`.
++
+[,sh]
+----
+just update
+----
+
+. Use `just --list` to list other available tasks.
++
+[,sh]
+----
+just --list
 ----
 
 == References
@@ -249,7 +212,7 @@ Refer to the project's link:CODE_OF_CONDUCT.adoc[Code of Conduct] for details.
 
 This repository is licensed under the https://www.gnu.org/licenses/gpl-3.0.html[GPLv3], a copy of which is provided link:LICENSE.adoc[here].
 
-© 2022 Jordan Williams
+© 2022-2024 Jordan Williams
 
 == Authors
 
