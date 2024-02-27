@@ -9,7 +9,7 @@ format:
 
 init-dev: && sync
     [ -d venv ] || python -m venv venv
-    venv/bin/python -m pip install -r requirements-dev.txt
+    venv/bin/python -m pip install --requirement requirements-dev.txt
     venv/bin/pre-commit install
 
 install-micropython file="rp2-pico-20220618-v1.19.1.uf2":
@@ -17,13 +17,13 @@ install-micropython file="rp2-pico-20220618-v1.19.1.uf2":
 
 install tty="/dev/ttyACM0":
     curl --location --remote-name https://raw.githubusercontent.com/micropython/micropython/master/tools/pyboard.py
-    python pyboard.py --device {{ tty }} -f cp main.py :
+    python pyboard.py --device {{ tty }} --filesystem cp main.py :
 
 alias l := lint
 
 lint:
     venv/bin/yamllint .
-    venv/bin/ruff check .
+    venv/bin/ruff check --fix .
 
 sync:
     venv/bin/pip-sync requirements-dev.txt
