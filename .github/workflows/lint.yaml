@@ -1,0 +1,46 @@
+name: Lint
+on:  # yamllint disable-line rule:truthy
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  checks: write
+  contents: read
+  issues: write
+  pull-requests: write
+
+jobs:
+  just:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: extractions/setup-just@v1
+        with:
+          just-version: "1.24.0"
+      - name: Format justfile
+        run: just --fmt --unstable
+      - uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: just
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - uses: chartboost/ruff-action@v1
+        with:
+          args: format
+      - uses: chartboost/ruff-action@v1
+        with:
+          args: check --fix
+      - uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: ruff
+  yamllint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: karancode/yamllint-github-action@v2.1.1

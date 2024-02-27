@@ -22,6 +22,7 @@
         "ibiqlik",
         "ifdef",
         "ifndef",
+        "justfile",
         "microcontroller",
         "microcontrollers",
         "micropython",
