@@ -34,13 +34,13 @@ ifdef::env-github[]
   <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Top View 2" src="pics/pico-pwm-fan-controller-breadboard-top-2.jpg?raw=true"/>
 </p>
 <p align="center">
-  <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Side View 1" src="pics/pico-pwm-fan-controller-breadboard-side-1?raw=true"/>
+  <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Side View 1" src="pics/pico-pwm-fan-controller-breadboard-side-1.jpg?raw=true"/>
 </p>
 <p align="center">
-  <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Side View 2" src="pics/pico-pwm-fan-controller-breadboard-side-2?raw=true"/>
+  <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Side View 2" src="pics/pico-pwm-fan-controller-breadboard-side-2.jpg?raw=true"/>
 </p>
 <p align="center">
-  <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Side View 3" src="pics/pico-pwm-fan-controller-breadboard-side-3?raw=true"/>
+  <img  alt="Raspberry PI Pico PWM Fan Controller Breadboard Side View 3" src="pics/pico-pwm-fan-controller-breadboard-side-3.jpg?raw=true"/>
 </p>
 ++++
 endif::[]
