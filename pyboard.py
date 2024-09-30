@@ -238,9 +238,9 @@ class ProcessPtyToTerminal:
             preexec_fn=os.setsid,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
         )
-        pty_line = self.subp.stderr.readline().decode("utf-8")
+        pty_line = self.subp.stdout.readline().decode("utf-8")
         m = re.search(r"/dev/pts/[0-9]+", pty_line)
         if not m:
             print("Error: unable to find PTY device in startup line:", pty_line)
@@ -726,7 +726,7 @@ def filesystem_command(pyb, args, progress_callback=None, verbose=False):
                 op_remote_src = pyb.fs_get
 
                 def op_local_src(src, dest, **_):
-                    return __import__("shutil").copy(src, dest)
+                    __import__("shutil").copy(src, dest)
 
             for src in srcs:
                 if verbose:

@@ -1,15 +1,17 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.6.0
     hooks:
       - id: check-byte-order-marker
       - id: check-executables-have-shebangs
       - id: check-json
       - id: check-merge-conflict
       - id: check-yaml
+        args: [--allow-multiple-documents]
       - id: end-of-file-fixer
       - id: mixed-line-ending
       - id: pretty-format-json
+        args: ["--autofix"]
         exclude: ^.vscode/.*\.json$
       - id: trailing-whitespace
   - repo: local
@@ -18,14 +20,14 @@ repos:
         entry: just --fmt --unstable
         files: |
           (?x)^(
-            .justfile|
+            \.justfile|
             justfile
           )$
         language: system
         name: just
         pass_filenames: false
   - repo: https://github.com/jazzband/pip-tools
-    rev: 7.4.0
+    rev: 7.4.1
     hooks:
       - id: pip-compile
         name: pip-compile requirements-dev.in
@@ -36,7 +38,7 @@ repos:
           - requirements-dev.in
         files: ^requirements-dev\.(in|txt)$
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.2.2
+    rev: v0.6.8
     hooks:
       - id: ruff
         args: [--fix]

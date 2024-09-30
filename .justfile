@@ -12,7 +12,7 @@ init-dev: && sync
     venv/bin/python -m pip install --requirement requirements-dev.txt
     venv/bin/pre-commit install
 
-install-micropython file="rp2-pico-20220618-v1.19.1.uf2":
+install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
 
 install tty="/dev/ttyACM0":

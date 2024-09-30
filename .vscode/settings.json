@@ -5,6 +5,7 @@
         "adoc",
         "AHCT",
         "Asciidoctor",
+        "autofix",
         "bootloader",
         "bootsel",
         "busio",
@@ -23,6 +24,7 @@
         "ifdef",
         "ifndef",
         "justfile",
+        "lightsleep",
         "microcontroller",
         "microcontrollers",
         "micropython",
@@ -46,5 +48,6 @@
         "VBUS",
         "venv",
         "xhci"
-    ]
+    ],
+    "asciidoc.antora.enableAntoraSupport": false
 }
