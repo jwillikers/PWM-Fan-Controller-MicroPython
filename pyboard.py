@@ -143,7 +143,10 @@ class TelnetToSerial:
                 timeout_count = 0
             else:
                 time.sleep(0.25)
-                if self.read_timeout is not None and timeout_count > 4 * self.read_timeout:
+                if (
+                    self.read_timeout is not None
+                    and timeout_count > 4 * self.read_timeout
+                ):
                     break
                 timeout_count += 1
 
@@ -265,7 +268,13 @@ class ProcessPtyToTerminal:
 
 class Pyboard:
     def __init__(
-        self, device, baudrate=115200, user="micro", password="python", wait=0, exclusive=True
+        self,
+        device,
+        baudrate=115200,
+        user="micro",
+        password="python",
+        wait=0,
+        exclusive=True,
     ):
         self.in_raw_repl = False
         self.use_raw_paste = True
@@ -273,7 +282,12 @@ class Pyboard:
             self.serial = ProcessToSerial(device[len("exec:") :])
         elif device.startswith("execpty:"):
             self.serial = ProcessPtyToTerminal(device[len("qemupty:") :])
-        elif device and device[0].isdigit() and device[-1].isdigit() and device.count(".") == 3:
+        elif (
+            device
+            and device[0].isdigit()
+            and device[-1].isdigit()
+            and device.count(".") == 3
+        ):
             # device looks like an IP address
             self.serial = TelnetToSerial(device, user, password, read_timeout=10)
         else:
@@ -296,7 +310,9 @@ class Pyboard:
                             # ESP8266/ESP32 boards use RTS/CTS for flashing and boot mode selection.
                             # DTR False: to avoid using the reset button will hang the MCU in bootloader mode
                             # RTS False: to prevent pulses on rts on serial.close() that would POWERON_RESET an ESPxx
-                            self.serial.dtr = False  # DTR False = gpio0 High = Normal boot
+                            self.serial.dtr = (
+                                False  # DTR False = gpio0 High = Normal boot
+                            )
                             self.serial.rts = False  # RTS False = EN High = MCU enabled
                         self.serial.open()
                     else:
@@ -421,7 +437,9 @@ class Pyboard:
                     return
                 else:
                     # Unexpected data from device.
-                    raise PyboardError("unexpected read during raw paste: {}".format(data))
+                    raise PyboardError(
+                        "unexpected read during raw paste: {}".format(data)
+                    )
             # Send out as much data as possible that fits within the allowed window.
             b = command_bytes[i : min(i + window_remain, len(command_bytes))]
             self.serial.write(b)
@@ -585,7 +603,10 @@ class Pyboard:
         if progress_callback:
             src_size = self.fs_stat(src).st_size
             written = 0
-        self.exec_("fr=open('%s','rb')\nr=fr.read\nfw=open('%s','wb')\nw=fw.write" % (src, dest))
+        self.exec_(
+            "fr=open('%s','rb')\nr=fr.read\nfw=open('%s','wb')\nw=fw.write"
+            % (src, dest)
+        )
         while True:
             data_len = int(self.exec_("d=r(%u)\nw(d)\nprint(len(d))" % chunk_size))
             if not data_len:
@@ -603,14 +624,18 @@ class Pyboard:
         with open(dest, "wb") as f:
             while True:
                 data = bytearray()
-                self.exec_("print(r(%u))" % chunk_size, data_consumer=lambda d: data.extend(d))
+                self.exec_(
+                    "print(r(%u))" % chunk_size, data_consumer=lambda d: data.extend(d)
+                )
                 assert data.endswith(b"\r\n\x04")
                 try:
                     data = ast.literal_eval(str(data[:-3], "ascii"))
                     if not isinstance(data, bytes):
                         raise ValueError("Not bytes")
                 except (UnicodeError, ValueError) as e:
-                    raise PyboardError("fs_get: Could not interpret received data: %s" % str(e))
+                    raise PyboardError(
+                        "fs_get: Could not interpret received data: %s" % str(e)
+                    )
                 if not data:
                     break
                 f.write(data)
@@ -656,7 +681,9 @@ class Pyboard:
 setattr(Pyboard, "exec", Pyboard.exec_)
 
 
-def execfile(filename, device="/dev/ttyACM0", baudrate=115200, user="micro", password="python"):
+def execfile(
+    filename, device="/dev/ttyACM0", baudrate=115200, user="micro", password="python"
+):
     pyb = Pyboard(device, baudrate, user, password)
     pyb.enter_raw_repl()
     output = pyb.execfile(filename)
@@ -697,7 +724,10 @@ def filesystem_command(pyb, args, progress_callback=None, verbose=False):
                 op_local_src = pyb.fs_put
             else:
                 op_remote_src = pyb.fs_get
-                op_local_src = lambda src, dest, **_: __import__("shutil").copy(src, dest)
+
+                def op_local_src(src, dest, **_):
+                    __import__("shutil").copy(src, dest)
+
             for src in srcs:
                 if verbose:
                     print("cp %s %s" % (src, dest))
@@ -780,8 +810,12 @@ def main():
         default=os.environ.get("PYBOARD_BAUDRATE", "115200"),
         help="the baud rate of the serial device",
     )
-    cmd_parser.add_argument("-u", "--user", default="micro", help="the telnet login username")
-    cmd_parser.add_argument("-p", "--password", default="python", help="the telnet login password")
+    cmd_parser.add_argument(
+        "-u", "--user", default="micro", help="the telnet login username"
+    )
+    cmd_parser.add_argument(
+        "-p", "--password", default="python", help="the telnet login password"
+    )
     cmd_parser.add_argument("-c", "--command", help="program passed in as string")
     cmd_parser.add_argument(
         "-w",
@@ -839,7 +873,12 @@ def main():
     # open the connection to the pyboard
     try:
         pyb = Pyboard(
-            args.device, args.baudrate, args.user, args.password, args.wait, args.exclusive
+            args.device,
+            args.baudrate,
+            args.user,
+            args.password,
+            args.wait,
+            args.exclusive,
         )
     except PyboardError as er:
         print(er)
@@ -899,7 +938,9 @@ def main():
         pyb.exit_raw_repl()
 
     # if asked explicitly, or no files given, then follow the output
-    if args.follow or (args.command is None and not args.filesystem and len(args.files) == 0):
+    if args.follow or (
+        args.command is None and not args.filesystem and len(args.files) == 0
+    ):
         try:
             ret, ret_err = pyb.follow(timeout=None, data_consumer=stdout_write_bytes)
         except PyboardError as er:
