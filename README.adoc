@@ -114,7 +114,16 @@ Now restart for the change to take effect.
 . Install {just} by following the instructions in the https://github.com/casey/just?tab=readme-ov-file#installation[installation section].
 
 . Hold down the button marked _BOOTSEL_ on the board while plugging it in to your computer with a micro USB cable.
-The RP2040 should automatically be mounted as a disk on your computer.
+
+. Mount the drive provided by the Pico.
+The RP2040 may be mounted as a disk on your computer automatically.
+If not, determine the block device representing the Pico by perusing the block devices available from the `lsblk` command.
+To mount `/dev/sda1`, as in my case, use the `udisksctl` command like so to mount the block device.
++
+[,sh]
+----
+udisksctl mount --block-device /dev/sda1
+----
 
 . To download and install MicroPython, run `just install-micropython`.
 +
@@ -130,7 +139,7 @@ This serial port can be found with the `dmesg` command as follows.
 --
 [,sh]
 ----
-dmesg | tail
+sudo dmesg | tail
 [  443.276661] usb 1-4.3.2: reset high-speed USB device number 22 using xhci_hcd
 [ 2180.628239] usb 1-3.2: USB disconnect, device number 10
 [ 4242.965271] usb 1-3.1: USB disconnect, device number 6
@@ -166,7 +175,7 @@ cd PWM-Fan-Controller-MicroPython
 +
 [,sh]
 ----
-just install
+just install /dev/ttyACM0
 ----
 
 . Once the previous command finishes, you may unplug the board.
