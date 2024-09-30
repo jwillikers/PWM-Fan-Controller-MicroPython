@@ -39,6 +39,7 @@
         "qtpy",
         "Qwiic",
         "repos",
+        "rshell",
         "Silverblue",
         "sramcs",
         "srcs",

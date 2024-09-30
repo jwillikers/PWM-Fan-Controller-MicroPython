@@ -16,8 +16,7 @@ install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
 
 install tty="/dev/ttyACM0":
-    curl --location --remote-name https://raw.githubusercontent.com/micropython/micropython/master/tools/pyboard.py
-    python pyboard.py --device {{ tty }} --filesystem cp main.py :
+    venv/bin/rshell --port {{ tty }} cp main.py /flash
 
 alias l := lint
 

@@ -75,7 +75,13 @@ pyright==1.1.382.post1 \
 pyserial==3.5 \
     --hash=sha256:3c77e014170dfffbd816e6ffc205e9842efb10be9f58ec16d3e8675b4925cddb \
     --hash=sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0
-    # via -r requirements-dev.in
+    # via
+    #   -r requirements-dev.in
+    #   rshell
+pyudev==0.24.3 \
+    --hash=sha256:2e945427a21674893bb97632401db62139d91cea1ee96137cc7b07ad22198fc7 \
+    --hash=sha256:e8246f0a014fe370119ba2bc781bfbe62c0298d0d6b39c94e83102a8a3f56960
+    # via rshell
 pyyaml==6.0.2 \
     --hash=sha256:01179a4a8559ab5de078078f37e5c1a30d76bb88519906844fd7bdea1b7729ff \
     --hash=sha256:0833f8694549e586547b576dcfaba4a6b55b9e96098b36cdc7ebefe667dfed48 \
@@ -133,6 +139,9 @@ pyyaml==6.0.2 \
     # via
     #   pre-commit
     #   yamllint
+rshell==0.0.33 \
+    --hash=sha256:c83e05e316691da203e5a5d9e6d6c2641db86bff85b72a1b980395e4638930c5
+    # via -r requirements-dev.in
 ruff==0.6.8 \
     --hash=sha256:007dee844738c3d2e6c24ab5bc7d43c99ba3e1943bd2d95d598582e9c1b27750 \
     --hash=sha256:1085c455d1b3fdb8021ad534379c60353b81ba079712bce7a900e834859182fa \

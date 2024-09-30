@@ -3,5 +3,6 @@ pip-tools
 pre-commit
 pyright
 pyserial
+rshell
 ruff
 yamllint

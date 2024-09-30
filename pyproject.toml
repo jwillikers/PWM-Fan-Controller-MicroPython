@@ -7,7 +7,6 @@ exclude = [
     "__*",
     "**/node_modules",
     "**/typings",
-    "pyboard.py",
     "venv",
 ]
 
