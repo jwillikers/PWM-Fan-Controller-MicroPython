@@ -1,0 +1,20 @@
+[tool.pyright]
+ignore = [
+    "**/typings",
+]
+exclude = [
+    "**/.*",
+    "__*",
+    "**/node_modules",
+    "**/typings",
+    "pyboard.py",
+    "venv",
+]
+
+typeCheckingMode = "basic"
+stubPath = "typings"
+typeshedPath = "typings"
+pythonPlatform = "Linux"
+
+reportMissingModuleSource = "none"
+reportUnnecessaryTypeIgnoreComment = "error"

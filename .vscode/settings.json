@@ -1,5 +1,4 @@
 {
-    "python.formatting.provider": "black",
     "cSpell.words": [
         "Adafruit",
         "adoc",
@@ -35,6 +34,7 @@
         "Pinout",
         "pyboard",
         "pylint",
+        "pyright",
         "pyserial",
         "qtpy",
         "Qwiic",

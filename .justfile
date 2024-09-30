@@ -24,6 +24,7 @@ alias l := lint
 lint:
     venv/bin/yamllint .
     venv/bin/ruff check --fix .
+    venv/bin/pyright --warnings .
 
 sync:
     venv/bin/pip-sync requirements-dev.txt
