@@ -28,6 +28,14 @@ identify==2.6.1 \
     --hash=sha256:53863bcac7caf8d2ed85bd20312ea5dcfc22226800f6d6881f232d861db5a8f0 \
     --hash=sha256:91478c5fb7c3aac5ff7bf9b4344f803843dc586832d5f110d672b19aa1984c98
     # via pre-commit
+micropython-rp2-pico-stubs==1.20.0.post5 \
+    --hash=sha256:57d64f3db9d1d2e1150983c4c719ea521644367283072146b06dcd15d783dfc1 \
+    --hash=sha256:aba78deb37e696b30744201da7435daa8363e24834750a8bb711b60c843391e8
+    # via -r requirements-dev.in
+micropython-stdlib-stubs==1.1.2 \
+    --hash=sha256:0e20e044f24b7f5d67205fd08780aa4ca0ea3741e4d14406ff7dca1ed8364f49 \
+    --hash=sha256:a455a01a5d7700ef99124072d94c967d5123778512260d87679e47e57f81e3d8
+    # via micropython-rp2-pico-stubs
 nodeenv==1.9.1 \
     --hash=sha256:6ec12890a2dab7946721edbfbcd91f3319c6ccc9aec47be7c7e6b7011ee6645f \
     --hash=sha256:ba11c9782d29c27c70ffbdda2d7415098754709be8a7056d79a737cd901155c9

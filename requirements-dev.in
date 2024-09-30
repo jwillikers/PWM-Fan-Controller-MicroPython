@@ -1,3 +1,4 @@
+micropython-rp2-pico-stubs
 pip-tools
 pre-commit
 pyserial
