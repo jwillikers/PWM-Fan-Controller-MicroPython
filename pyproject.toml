@@ -14,6 +14,7 @@ typeCheckingMode = "basic"
 stubPath = "typings"
 typeshedPath = "typings"
 pythonPlatform = "Linux"
+venv = "venv"
 
 reportMissingModuleSource = "none"
 reportUnnecessaryTypeIgnoreComment = "error"
