@@ -24,6 +24,7 @@
         "ifdef",
         "ifndef",
         "justfile",
+        "lightsleep",
         "microcontroller",
         "microcontrollers",
         "micropython",

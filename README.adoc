@@ -83,16 +83,11 @@ The fan setup might evolve in the future to take into account temperature sensin
 The 3.3V microcontroller used here requires a logic-level shifter to boost the PWM signal up to 5V for the fan.
 I use the 74AHCT125 to perform the logic-level conversion, using pin #40, `VBUS`, to provide the 5V reference voltage.
 
-The Raspberry Pi Pico draws a steady 20.78 mA of power.
+The Raspberry Pi Pico only draws 8.63 mA of power now that the firmware is taking advantage of the light sleep mode.
 If you're concerned about power usage or type safety, then you might be interested in my Rust-based implementation, https://github.com/jwillikers/PWM-Fan-Controller[PWM Fan Controller].
-The Rust-based version sips a bit less power on the Pico, 2.07 mA.
+The Rust-based version still sips a bit less power on the Pico, 1.99 mA.
 This is probably mostly due to the fact that the Rust-based version runs entirely off the low-power Ring Oscillator clock instead of the Crystal Oscillator.
 If you know any ways to improve the energy usage, feel free to get in touch or contribute!
-
-== Shortcomings
-
-. MicroPython does not yet support deep sleep for the RP2040 board.
-Deep sleep after setting the PWM would conserve energy.
 
 == Getting Started
 
