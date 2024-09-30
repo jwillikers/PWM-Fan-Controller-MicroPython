@@ -5,6 +5,7 @@
         "adoc",
         "AHCT",
         "Asciidoctor",
+        "autofix",
         "bootloader",
         "bootsel",
         "busio",

@@ -7,9 +7,11 @@ repos:
       - id: check-json
       - id: check-merge-conflict
       - id: check-yaml
+        args: [--allow-multiple-documents]
       - id: end-of-file-fixer
       - id: mixed-line-ending
       - id: pretty-format-json
+        args: ["--autofix"]
         exclude: ^.vscode/.*\.json$
       - id: trailing-whitespace
   - repo: local
@@ -18,7 +20,7 @@ repos:
         entry: just --fmt --unstable
         files: |
           (?x)^(
-            .justfile|
+            \.justfile|
             justfile
           )$
         language: system
