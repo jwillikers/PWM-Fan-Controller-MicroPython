@@ -1,0 +1,24 @@
+name: Pyright
+"on":
+  pull_request:
+    branches: ["main"]
+    paths:
+      - .github/workflows/pyright.yaml
+      - pyproject.toml
+      - '**.py'
+
+jobs:
+  pyright:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          cache: "pip"
+          python-version: "3.12"
+      - uses: extractions/setup-just@v2
+      - run: |
+          just init-dev
+          echo "$PWD/.venv/bin" >> $GITHUB_PATH
+      - uses: jakebailey/pyright-action@v2
