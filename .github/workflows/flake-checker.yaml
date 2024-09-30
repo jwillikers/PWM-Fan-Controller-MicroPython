@@ -1,0 +1,14 @@
+name: Check Nix Flake
+"on":
+  pull_request:
+    branches: ["main"]
+    paths:
+      - .github/workflows/flake-checker.yaml
+      - flake.lock
+
+jobs:
+  flake-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/flake-checker-action@v9

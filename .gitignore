@@ -4,3 +4,13 @@ __pycache__/
 typings/
 .venv/
 venv/
+
+# Firmware
+*.elf
+*.uf2
+
+# Nix
+result
+
+# direnv
+.direnv/

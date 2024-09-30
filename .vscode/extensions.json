@@ -2,6 +2,7 @@
     "recommendations": [
         "charliermarsh.ruff",
         "ms-python.vscode-pylance",
-        "ms-python.python"
+        "ms-python.python",
+        "mkhl.direnv"
     ]
 }

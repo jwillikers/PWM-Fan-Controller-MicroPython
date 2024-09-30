@@ -1,0 +1,32 @@
+name: MicroPython
+
+"on":
+  pull_request:
+    branches: ["main"]
+    paths:
+      - .github/workflows/micropython.yaml
+      - flake.lock
+      - flake.nix
+  push:
+    branches: ["main"]
+    paths:
+      - .github/workflows/micropython.yaml
+      - flake.lock
+      - flake.nix
+  workflow_dispatch:
+
+jobs:
+  micropython:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Build
+        run: nix build '.#micropython'
+      - name: Upload MicroPython
+        uses: actions/upload-artifact@v4
+        with:
+          name: micropython
+          path: |
+            result/bin/RPI_PICO.uf2
