@@ -58,14 +58,21 @@ endif::[]
 All the hardware components in my particular build are enumerated here.
 
 .Fan Controller Components
-* {Raspberry-Pi-Pico}
+* https://www.adafruit.com/product/798[12V DC 1000mA (1A) regulated switching power adapter - UL listed]
+* https://www.digikey.com/en/products/detail/onsemi/1N4001RLG/918017[1N4001 Power Blocking Diode]
+* https://www.digikey.com/en/products/detail/molex/0470533000/3262217[4-Pin Male Fan Header]
+* https://www.digikey.com/en/products/detail/texas-instruments/SN74AHCT125N/375798[74AHCT125 - Quad Level-Shifter]
+* https://www.adafruit.com/product/368[Female DC Power adapter - 2.1mm jack to screw terminal block]
 * https://www.adafruit.com/product/64[Half-size breadboard]
-* {Noctua-NF-P12-redux-1700-PWM-Fan}
-* https://www.adafruit.com/product/1787[74AHCT125 - Quad Level-Shifter]
-* https://www.adafruit.com/product/759[Premium Male/Male Jumper Wires - 40 x 3" (75mm)]
+* https://www.adafruit.com/product/1311[Hook-up Wire - 22AWG Solid Core]
 * micro USB Power Supply for the microcontroller
+* {Raspberry-Pi-Pico}
+* https://www.adafruit.com/product/759[Premium Male/Male Jumper Wires - 40 x 3" (75mm)]
 
 Programming will require a micro USB cable and a computer.
+If you don't already have one, you'll probably want a fan, too.
+This circuit is meant for a 12V fan.
+I use this controller for the {Noctua-NF-P12-redux-1700-PWM-Fan}.
 
 == How it Works
 
