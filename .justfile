@@ -15,8 +15,8 @@ init-dev: && sync
 install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
 
-install tty="/dev/ttyACM0":
-    venv/bin/rshell --port {{ tty }} cp main.py /flash
+install tty="":
+    venv/bin/rshell {{ if tty != "" { "--port " + tty } else { "" } }} cp main.py /pyboard/
 
 alias l := lint
 
