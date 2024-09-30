@@ -1,0 +1,20 @@
+name: Format justfiles
+"on":
+  pull_request:
+    branches: ["main"]
+    paths:
+      - .github/workflows/format-just.yaml
+      - '**/.justfile'
+      - '**/justfile'
+      - '**/*.just'
+
+jobs:
+  format-just:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - uses: extractions/setup-just@v2
+      - name: Format justfile
+        run: just --fmt --unstable
