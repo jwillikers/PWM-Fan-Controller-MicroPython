@@ -4,6 +4,8 @@ name: yamllint
     branches: ["main"]
     paths:
       - .github/workflows/yamllint.yaml
+      - flake.lock
+      - requirements-dev.txt
       - .yamllint.yaml
       - '**.yaml'
       - '**.yml'
@@ -13,4 +15,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: karancode/yamllint-github-action@v2.1.1
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        with:
+          key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
+          path: .venv
+      - name: Check YAML files
+        run: nix develop --command yamllint --format github .

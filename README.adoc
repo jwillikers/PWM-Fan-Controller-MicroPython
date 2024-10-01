@@ -185,7 +185,9 @@ Both methods are described in the following sections.
 
 I've added development environment and some helpers using {Nix}.
 Honestly, with {pip-tools} and a hard-coded version of MicroPython, this project is already very reproducible.
-Nix doesn't offer much on top of that, except that it manages the version Python which is nice, and builds MicroPython itself, allowing further tweaks to the MicroPython implementation in a reproducible manner.
+Nix doesn't offer much on top of that, except that it manages the version Python which is nice, and builds MicroPython itself.
+This allows further tweaks to be made to the MicroPython implementation in a reproducible manner.
+Additionally, it provides better consistency between the development environment and CI.
 I mostly wanted to use this as a learning opportunity, which was well worth the effort.
 Currently, Nix is just using a virtual environment with the dependencies from the `requirements-dev.txt` file.
 

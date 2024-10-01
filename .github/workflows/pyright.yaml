@@ -4,7 +4,9 @@ name: Pyright
     branches: ["main"]
     paths:
       - .github/workflows/pyright.yaml
+      - flake.lock
       - pyproject.toml
+      - requirements-dev.txt
       - '**.py'
 
 jobs:
@@ -12,13 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
         with:
-          cache: "pip"
-          python-version: "3.12"
-      - uses: extractions/setup-just@v2
-      - run: |
-          just init-dev
-          echo "$PWD/.venv/bin" >> $GITHUB_PATH
-      - uses: jakebailey/pyright-action@v2
+          key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
+          path: .venv
+      - name: Check Python code with Pyright
+        run: nix develop --command pyright --warnings
