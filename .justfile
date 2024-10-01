@@ -32,10 +32,5 @@ alias u := update
 alias up := update
 
 update:
-    .venv/bin/pip-compile \
-        --allow-unsafe \
-        --generate-hashes \
-        --reuse-hashes \
-        --upgrade \
-        requirements-dev.in
+    .venv/bin/pip-compile requirements-dev.in
     .venv/bin/pre-commit autoupdate

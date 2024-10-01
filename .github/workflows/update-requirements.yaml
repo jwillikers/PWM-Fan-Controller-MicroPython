@@ -23,13 +23,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv
       - name: Update Python dependencies in requirements-dev.txt
-        run: nix develop --command
-            pip-compile
-            --allow-unsafe
-            --generate-hashes
-            --reuse-hashes
-            --upgrade
-            requirements-dev.in
+        run: nix develop --command pip-compile requirements-dev.in
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:

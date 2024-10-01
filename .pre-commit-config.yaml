@@ -32,9 +32,6 @@ repos:
       - id: pip-compile
         name: pip-compile requirements-dev.in
         args:
-          - --allow-unsafe
-          - --generate-hashes
-          - --reuse-hashes
           - requirements-dev.in
         files: ^requirements-dev\.(in|txt)$
   - repo: https://github.com/astral-sh/ruff-pre-commit
