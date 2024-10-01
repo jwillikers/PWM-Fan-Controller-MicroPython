@@ -35,11 +35,9 @@
             # todo Should everything be pulled in via Nix or pip-tools?
             # pre-commit
             # pyright
-            python312Packages.pip
-            python312Packages.pip-tools
-            python312Packages.python
-            # python312Packages.venv
-            python312Packages.venvShellHook
+            python3
+            python3Packages.pip-tools
+            python3Packages.venvShellHook
             # rshell
             # ruff
             # yamllint
@@ -52,9 +50,12 @@
           devShells.default = mkShell {
             inherit buildInputs nativeBuildInputs;
             venvDir = "./.venv";
+            postVenvCreation = ''
+              pip-sync --python-executable .venv/bin/python requirements-dev.txt
+            '';
+            # https://github.com/NixOS/nixpkgs/issues/223151
             postShellHook = ''
-              PYTHONPATH=\$PWD/\.venv/\${python312Packages.python.sitePackages}/:\$PYTHONPATH
-              pip-sync requirements-dev.txt
+              export LC_ALL="C.UTF-8";
             '';
           };
           packages = {
