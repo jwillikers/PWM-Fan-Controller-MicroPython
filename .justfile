@@ -9,6 +9,7 @@ format:
 
 init-dev: && sync
     [ -d .venv ] || python -m venv .venv
+    .venv/bin/python -m pip install pip-tools
     .venv/bin/python -m pip install --requirement requirements-dev.txt
     .venv/bin/pre-commit install
 
@@ -26,11 +27,11 @@ lint:
     .venv/bin/pyright --warnings
 
 sync:
-    .venv/bin/pip-sync requirements-dev.txt
+    source .venv/bin/activate && pip-sync --python-executable .venv/bin/python requirements-dev.txt
 
 alias u := update
 alias up := update
 
 update:
-    .venv/bin/pip-compile requirements-dev.in
+    source .venv/bin/activate && pip-compile requirements-dev.in
     .venv/bin/pre-commit autoupdate
