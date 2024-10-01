@@ -26,7 +26,7 @@ lint:
     .venv/bin/pyright --warnings
 
 sync:
-    .venv/bin/pip-sync requirements-dev.txt
+    .venv/bin/pip-sync --python-executable .venv/bin/python requirements-dev.txt
 
 alias u := update
 alias up := update
