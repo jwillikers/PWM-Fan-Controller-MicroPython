@@ -1,0 +1,97 @@
+{
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
+  };
+  outputs = { self, nixpkgs, flake-utils }:
+    flake-utils.lib.eachDefaultSystem
+      (system:
+         let
+          overlays = [
+            (final: prev: {
+              # Build MicroPython for the rp2-pico
+              micropython = prev.micropython.overrideAttrs (old: {
+                nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.cmake pkgs.gcc-arm-embedded ];
+                dontUseCmakeConfigure = true;
+                doCheck = false;
+                makeFlags = [ "-C" "ports/rp2" ];
+                installPhase = ''
+                  runHook preInstall
+                  mkdir --parents $out/bin
+                  install -Dm755 ports/rp2/build-RPI_PICO/firmware.uf2 $out/bin/RPI_PICO.uf2
+                  runHook postInstall
+                '';
+              });
+            })
+          ];
+          pkgs = import nixpkgs {
+            inherit system overlays;
+          };
+          nativeBuildInputs = with pkgs; [
+            fish
+            just
+            micropython
+            nushell
+            # todo Should everything be pulled in via Nix or pip-tools?
+            # pre-commit
+            # pyright
+            python3Packages.python
+            python3Packages.pip-tools
+            python3Packages.venvShellHook
+            # rshell
+            # ruff
+            # yamllint
+          ];
+          buildInputs = with pkgs; [
+          ];
+        in
+        with pkgs;
+        {
+          devShells.default = mkShell {
+            inherit buildInputs nativeBuildInputs;
+            venvDir = "./.venv";
+            postVenvCreation = ''
+              pip-sync --python-executable .venv/bin/python requirements-dev.txt
+            '';
+            # https://github.com/NixOS/nixpkgs/issues/223151
+            postShellHook = ''
+              export LC_ALL="C.UTF-8";
+            '';
+          };
+          packages = {
+            default = pkgs.micropython;
+            micropython = pkgs.micropython;
+            pwm-fan-controller = callPackage ./default.nix {};
+          };
+          apps = {
+            install = {
+              micropython = let
+                script = pkgs.writeShellApplication {
+                  name = "install-micropython";
+                  runtimeInputs = with pkgs; [micropython];
+                  text = ''
+                    cp ${pkgs.micropython}/bin/RPI_PICO.uf2 "/run/media/$(id --name --user)/RPI-RP2/"
+                  '';
+                };
+                in {
+                  type = "app";
+                  program = "${script}/bin/install-micropython";
+                };
+              pwm-fan-controller = let
+                script = pkgs.writeShellApplication {
+                  name = "install-pwm-fan-controller";
+                  runtimeInputs = with pkgs; [rshell];
+                  text = ''
+                    ${pkgs.rshell}/bin/rshell cp ${self.packages.${system}.pwm-fan-controller-micropython}/bin/main.py /pyboard/
+                  '';
+                };
+                in {
+                  type = "app";
+                  program = "${script}/bin/install-pwm-fan-controller";
+                };
+              };
+            default = apps.install.pwm-fan-controller;
+          };
+        }
+      );
+}

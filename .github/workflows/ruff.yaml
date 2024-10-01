@@ -4,7 +4,9 @@ name: Ruff
     branches: ["main"]
     paths:
       - .github/workflows/ruff.yaml
+      - flake.lock
       - pyproject.toml
+      - requirements-dev.txt
       - '**.py'
 
 permissions:
@@ -18,16 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
         with:
-          python-version: "3.12"
-      - uses: chartboost/ruff-action@v1
-        with:
-          args: format
-      - uses: chartboost/ruff-action@v1
-        with:
-          args: check --fix
+          key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
+          path: .venv
+      - name: Format with Ruff
+        run: nix develop --command ruff format
+      - name: Fix Ruff checks
+        run: nix develop --command ruff check --fix
       - uses: reviewdog/action-suggester@v1
         with:
+          fail_on_error: true
+          github_token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
           tool_name: ruff

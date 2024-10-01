@@ -32,9 +32,6 @@ repos:
       - id: pip-compile
         name: pip-compile requirements-dev.in
         args:
-          - --allow-unsafe
-          - --generate-hashes
-          - --reuse-hashes
           - requirements-dev.in
         files: ^requirements-dev\.(in|txt)$
   - repo: https://github.com/astral-sh/ruff-pre-commit
@@ -43,6 +40,10 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+  - repo: https://github.com/RobertCraigie/pyright-python
+    rev: v1.1.382.post1
+    hooks:
+      - id: pyright
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.35.1
     hooks:

@@ -1,4 +1,16 @@
 __pycache__/
 .ruff_cache/
 .pytest_cache/
+typings/
+.venv/
 venv/
+
+# Firmware
+*.elf
+*.uf2
+
+# Nix
+result
+
+# direnv
+.direnv/

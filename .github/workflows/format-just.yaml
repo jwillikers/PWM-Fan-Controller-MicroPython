@@ -4,6 +4,7 @@ name: Format justfiles
     branches: ["main"]
     paths:
       - .github/workflows/format-just.yaml
+      - flake.lock
       - '**/.justfile'
       - '**/justfile'
       - '**/*.just'
@@ -15,6 +16,5 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v14
       - uses: DeterminateSystems/magic-nix-cache-action@v8
-      - uses: extractions/setup-just@v2
       - name: Format justfile
-        run: just --fmt --unstable
+        run: nix develop --command just --check --fmt --unstable

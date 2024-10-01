@@ -1,0 +1,23 @@
+[tool.pip-tools]
+allow_unsafe = true
+generate_hashes = true
+reuse_hashes = true
+upgrade = true
+
+[tool.pyright]
+ignore = [
+    "**/typings",
+]
+exclude = [
+    "**/.*",
+    "__*",
+    "**/node_modules",
+    "**/typings",
+    "venv",
+]
+
+typeCheckingMode = "basic"
+pythonPlatform = "Linux"
+
+reportMissingModuleSource = "none"
+reportUnnecessaryTypeIgnoreComment = "error"
