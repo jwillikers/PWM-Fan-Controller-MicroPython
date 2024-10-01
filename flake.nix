@@ -35,7 +35,7 @@
             # todo Should everything be pulled in via Nix or pip-tools?
             # pre-commit
             # pyright
-            python3
+            python3Packages.python
             python3Packages.pip-tools
             python3Packages.venvShellHook
             # rshell
