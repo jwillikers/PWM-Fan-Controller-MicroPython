@@ -1,0 +1,40 @@
+name: Update Requirements
+
+"on":
+  schedule:
+    # Once a month on the 3rd
+    - cron: "0 0 3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-requirements:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Cache Python virtual environment
+        uses: actions/cache@v4
+        with:
+          key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
+          path: .venv
+      - name: Update Python dependencies in requirements-dev.txt
+        run: nix develop --command
+            pip-compile
+            --allow-unsafe
+            --generate-hashes
+            --reuse-hashes
+            --upgrade
+            requirements-dev.in
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          assignees: ${{ github.repository_owner }}
+          branch: "update/requirements"
+          commit-message: "chore(deps): Update Python dependencies"
+          title: "chore(deps): Update Python dependencies"
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
