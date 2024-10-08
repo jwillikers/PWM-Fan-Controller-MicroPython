@@ -56,6 +56,7 @@
             # https://github.com/NixOS/nixpkgs/issues/223151
             postShellHook = ''
               export LC_ALL="C.UTF-8";
+              pip-sync --python-executable .venv/bin/python requirements-dev.txt
             '';
           };
           packages = {
