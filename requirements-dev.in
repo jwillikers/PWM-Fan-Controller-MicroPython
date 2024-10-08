@@ -1,7 +1,7 @@
 micropython-rp2-pico-stubs
+mpremote
 pip-tools
 pre-commit
 pyright
-rshell
 ruff
 yamllint

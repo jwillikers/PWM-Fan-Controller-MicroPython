@@ -16,8 +16,10 @@ init-dev: && sync
 install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
 
-install tty="": init-dev
-    .venv/bin/rshell {{ if tty != "" { "--port " + tty } else { "" } }} cp main.py /pyboard/
+install device="":
+    #!/usr/bin/env sh
+    tty=$(.venv/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
+    .venv/bin/mpremote connect {{ if device == "" { "port:$tty" } else { device } }} fs cp main.py :
 
 alias l := lint
 

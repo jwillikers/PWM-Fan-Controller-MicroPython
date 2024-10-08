@@ -33,12 +33,12 @@
             micropython
             nushell
             # todo Should everything be pulled in via Nix or pip-tools?
+            # mpremote
             # pre-commit
             # pyright
             python3Packages.python
             python3Packages.pip-tools
             python3Packages.venvShellHook
-            # rshell
             # ruff
             # yamllint
           ];
@@ -80,9 +80,10 @@
               pwm-fan-controller = let
                 script = pkgs.writeShellApplication {
                   name = "install-pwm-fan-controller";
-                  runtimeInputs = with pkgs; [rshell];
+                  runtimeInputs = with pkgs; [mpremote];
                   text = ''
-                    ${pkgs.rshell}/bin/rshell cp ${self.packages.${system}.pwm-fan-controller-micropython}/bin/main.py /pyboard/
+                    tty=$(${pkgs.mpremote}/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
+                    ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${self.packages.${system}.pwm-fan-controller-micropython}/bin/main.py :
                   '';
                 };
                 in {
