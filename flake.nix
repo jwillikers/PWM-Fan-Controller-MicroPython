@@ -54,7 +54,6 @@
           nushell
           # todo Should everything be pulled in via Nix or pip-tools?
           # mpremote
-          # pre-commit
           # pyright
           python3Packages.python
           python3Packages.pip-tools
@@ -67,9 +66,9 @@
           [
           ];
         treefmt.config = {
-          projectRootFile = "flake.nix";
           programs = {
             actionlint.enable = true;
+            # image-geolocation-metadata.enable = true;
             # jsonfmt.enable = true;
             just.enable = true;
             # todo
@@ -80,6 +79,32 @@
             taplo.enable = true;
             # yamlfmt.enable = true;
           };
+          projectRootFile = "flake.nix";
+          settings.formatter = {
+            "strip-image-gps-metadata" = {
+              command = "${pkgs.bash}/bin/bash";
+              options = [
+                "-euc"
+                ''
+                  for file in "$@"; do
+                    ${pkgs.exiftool}/bin/exiftool "-gps*=" "$file"
+                  done
+                ''
+                "--" # bash swallows the second argument when using -c
+              ];
+              includes = [
+                "*.avif"
+                "*.bmp"
+                "*.gif"
+                "*.jpeg"
+                "*.jpg"
+                "*.png"
+                "*.svg"
+                "*.tiff"
+                "*.webp"
+              ];
+            };
+          };
         };
         treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt.config;
         pre-commit = pre-commit-hooks.lib.${system}.run {
@@ -89,18 +114,34 @@
             check-json.enable = true;
             check-toml.enable = true;
             check-yaml.enable = true;
-            detect-private-keys.enable = true;
-            end-of-file-fixer.enable = true;
-            fix-byte-order-marker.enable = true;
-            flake-checker.enable = true;
-            mixed-line-endings.enable = true;
-            trim-trailing-whitespace.enable = true;
 
             # todo Not integrated with Nix?
             check-format = {
               enable = true;
               entry = "${treefmtEval.config.build.wrapper}/bin/treefmt --fail-on-change";
             };
+
+            detect-private-keys.enable = true;
+            end-of-file-fixer.enable = true;
+            fix-byte-order-marker.enable = true;
+            flake-checker.enable = true;
+            mixed-line-endings.enable = true;
+
+            # mogrify-strip = {
+            #   enable = true;
+            #   package = pkgs.python3Packages.pip-tools;
+            #   entry = "${pkgs.python3Packages.pip-tools}/bin/pip-compile requirements-dev.in";
+            #   description = "Automatically compile requirements.";
+            #   name = "pip-compile";
+            #   files = "^requirements-dev\\.(in|txt)$";
+            #   pass_filenames = false;
+            # };
+
+            # - id: mogrify-strip
+            # entry: nix develop --command nu check-image-metadata.nu --strip
+            # language: system
+            # name: Strip Image Metadata
+            # types: [binary, file, image]
 
             pip-compile = {
               enable = true;
@@ -112,11 +153,14 @@
               pass_filenames = false;
             };
 
-            pyright.enable = true;
-            pyright.args = [
-              "--pythonpath"
-              ".venv/bin/python"
-            ];
+            pyright = {
+              args = [
+                "--pythonpath"
+                ".venv/bin/python"
+              ];
+              enable = true;
+            };
+            trim-trailing-whitespace.enable = true;
             yamllint.enable = true;
           };
         };
