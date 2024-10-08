@@ -4,8 +4,7 @@ alias f := format
 alias fmt := format
 
 format:
-    .venv/bin/ruff format .
-    just --fmt --unstable
+    treefmt
 
 init-dev: && sync
     [ -d .venv ] || python -m venv .venv

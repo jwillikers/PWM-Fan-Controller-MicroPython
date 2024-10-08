@@ -1,99 +1,165 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    pre-commit-hooks = {
+      url = "github:cachix/pre-commit-hooks.nix";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    treefmt-nix.url = "github:numtide/treefmt-nix";
   };
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem
-      (system:
-         let
-          overlays = [
-            (final: prev: {
-              # Build MicroPython for the rp2-pico
-              micropython = prev.micropython.overrideAttrs (old: {
-                nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.cmake pkgs.gcc-arm-embedded ];
-                dontUseCmakeConfigure = true;
-                doCheck = false;
-                makeFlags = [ "-C" "ports/rp2" ];
-                installPhase = ''
-                  runHook preInstall
-                  mkdir --parents $out/bin
-                  install -Dm755 ports/rp2/build-RPI_PICO/firmware.uf2 $out/bin/RPI_PICO.uf2
-                  runHook postInstall
-                '';
-              });
-            })
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+      pre-commit-hooks,
+      treefmt-nix,
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        overlays = [
+          (final: prev: {
+            # Build MicroPython for the rp2-pico
+            micropython = prev.micropython.overrideAttrs (old: {
+              nativeBuildInputs = old.nativeBuildInputs ++ [
+                pkgs.cmake
+                pkgs.gcc-arm-embedded
+              ];
+              dontUseCmakeConfigure = true;
+              doCheck = false;
+              makeFlags = [
+                "-C"
+                "ports/rp2"
+              ];
+              installPhase = ''
+                runHook preInstall
+                mkdir --parents $out/bin
+                install -Dm755 ports/rp2/build-RPI_PICO/firmware.uf2 $out/bin/RPI_PICO.uf2
+                runHook postInstall
+              '';
+            });
+          })
+        ];
+        pkgs = import nixpkgs {
+          inherit system overlays;
+        };
+        nativeBuildInputs = with pkgs; [
+          fish
+          just
+          micropython
+          nushell
+          # todo Should everything be pulled in via Nix or pip-tools?
+          # mpremote
+          # pre-commit
+          # pyright
+          python3Packages.python
+          python3Packages.pip-tools
+          python3Packages.venvShellHook
+          # ruff
+          # yamllint
+        ];
+        buildInputs =
+          with pkgs;
+          [
           ];
-          pkgs = import nixpkgs {
-            inherit system overlays;
+        treefmt.config = {
+          projectRootFile = "flake.nix";
+          programs = {
+            # jsonfmt.enable = true;
+            just.enable = true;
+            # todo
+            # mypy.enable = true;
+            nixfmt.enable = true;
+            ruff-check.enable = true;
+            ruff-format.enable = true;
+            # yamlfmt.enable = true;
           };
-          nativeBuildInputs = with pkgs; [
-            fish
-            just
-            micropython
-            nushell
-            # todo Should everything be pulled in via Nix or pip-tools?
-            # mpremote
-            # pre-commit
-            # pyright
-            python3Packages.python
-            python3Packages.pip-tools
-            python3Packages.venvShellHook
-            # ruff
-            # yamllint
+        };
+        treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt.config;
+      in
+      with pkgs;
+      {
+        devShells.default = mkShell {
+          inherit buildInputs;
+          nativeBuildInputs = nativeBuildInputs ++ [
+            (treefmt-nix.lib.mkWrapper pkgs treefmt.config)
           ];
-          buildInputs = with pkgs; [
-          ];
-        in
-        with pkgs;
-        {
-          devShells.default = mkShell {
-            inherit buildInputs nativeBuildInputs;
-            venvDir = "./.venv";
-            postVenvCreation = ''
-              pip-sync --python-executable .venv/bin/python requirements-dev.txt
-            '';
-            # https://github.com/NixOS/nixpkgs/issues/223151
-            postShellHook = ''
-              export LC_ALL="C.UTF-8";
-              pip-sync --python-executable .venv/bin/python requirements-dev.txt
-            '';
-          };
-          packages = {
-            default = pkgs.micropython;
-            micropython = pkgs.micropython;
-            pwm-fan-controller = callPackage ./default.nix {};
-          };
-          apps = {
-            install = {
-              micropython = let
+          venvDir = "./.venv";
+          postVenvCreation = ''
+            pip-sync --python-executable .venv/bin/python requirements-dev.txt
+          '';
+          # https://github.com/NixOS/nixpkgs/issues/223151
+          postShellHook = ''
+            export LC_ALL="C.UTF-8";
+            pip-sync --python-executable .venv/bin/python requirements-dev.txt
+          '';
+          # devshell.startup.pre-commit.text =
+          #   (pre-commit-hooks.lib.${system}.run {
+          #     src = ./.;
+          #     hooks = {
+          #       check-format = {
+          #         enable = true;
+          #         entry = "treefmt --fail-on-change";
+          #       };
+          #       cargo-clippy = {
+          #         enable = true;
+          #         description = "Lint Rust code.";
+          #         entry = "cargo-clippy --workspace -- -D warnings";
+          #         files = "\\.rs$";
+          #         pass_filenames = false;
+          #       };
+          #     };
+          #   }).shellHook;
+        };
+        packages = {
+          default = pkgs.micropython;
+          micropython = pkgs.micropython;
+          pwm-fan-controller = callPackage ./default.nix { };
+        };
+        apps = {
+          install = {
+            micropython =
+              let
                 script = pkgs.writeShellApplication {
                   name = "install-micropython";
-                  runtimeInputs = with pkgs; [micropython];
+                  runtimeInputs = with pkgs; [ micropython ];
                   text = ''
                     cp ${pkgs.micropython}/bin/RPI_PICO.uf2 "/run/media/$(id --name --user)/RPI-RP2/"
                   '';
                 };
-                in {
-                  type = "app";
-                  program = "${script}/bin/install-micropython";
-                };
-              pwm-fan-controller = let
+              in
+              {
+                type = "app";
+                program = "${script}/bin/install-micropython";
+              };
+            pwm-fan-controller =
+              let
                 script = pkgs.writeShellApplication {
                   name = "install-pwm-fan-controller";
-                  runtimeInputs = with pkgs; [mpremote];
+                  runtimeInputs = with pkgs; [ mpremote ];
                   text = ''
                     tty=$(${pkgs.mpremote}/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-                    ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${self.packages.${system}.pwm-fan-controller-micropython}/bin/main.py :
+                    ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${
+                      self.packages.${system}.pwm-fan-controller-micropython
+                    }/bin/main.py :
                   '';
                 };
-                in {
-                  type = "app";
-                  program = "${script}/bin/install-pwm-fan-controller";
-                };
+              in
+              {
+                type = "app";
+                program = "${script}/bin/install-pwm-fan-controller";
               };
-            default = apps.install.pwm-fan-controller;
           };
-        }
-      );
+          default = apps.install.pwm-fan-controller;
+        };
+        formatter = treefmtEval.config.build.wrapper;
+        checks = {
+          formatting = treefmtEval.config.build.check self;
+        };
+      }
+    );
 }

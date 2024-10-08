@@ -1,4 +1,5 @@
-{ stdenv
+{
+  stdenv,
 }:
 stdenv.mkDerivation {
   pname = "pwm-fan-controller-micropython";
@@ -6,7 +7,7 @@ stdenv.mkDerivation {
 
   src = ./.;
 
-  nativeBuildInputs = [];
+  nativeBuildInputs = [ ];
 
   installPhase = ''
     mkdir --parents $out/bin
