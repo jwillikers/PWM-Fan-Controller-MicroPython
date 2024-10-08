@@ -18,7 +18,7 @@ jobs:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv
       - name: Run treefmt
-        run: nix develop --command treefmt --ci --fail-on-change --no-cache
+        run: nix develop --command treefmt --ci
       - uses: reviewdog/action-suggester@v1
         with:
           fail_on_error: true
