@@ -5,16 +5,8 @@ reuse_hashes = true
 upgrade = true
 
 [tool.pyright]
-ignore = [
-    "**/typings",
-]
-exclude = [
-    "**/.*",
-    "__*",
-    "**/node_modules",
-    "**/typings",
-    "venv",
-]
+ignore = ["**/typings"]
+exclude = ["**/.*", "__*", "**/node_modules", "**/typings", "venv"]
 
 typeCheckingMode = "basic"
 pythonPlatform = "Linux"

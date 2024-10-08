@@ -76,18 +76,63 @@
             nixfmt.enable = true;
             ruff-check.enable = true;
             ruff-format.enable = true;
+            taplo.enable = true;
             # yamlfmt.enable = true;
           };
         };
         treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt.config;
+        pre-commit = pre-commit-hooks.lib.${system}.run {
+          src = ./.;
+          hooks = {
+            check-executables-have-shebangs.enable = true;
+            check-json.enable = true;
+            check-toml.enable = true;
+            check-yaml.enable = true;
+            detect-private-keys.enable = true;
+            end-of-file-fixer.enable = true;
+            fix-byte-order-marker.enable = true;
+            flake-checker.enable = true;
+            mixed-line-endings.enable = true;
+            trim-trailing-whitespace.enable = true;
+
+            # todo Not integrated with Nix?
+            check-format = {
+              enable = true;
+              entry = "${treefmtEval.config.build.wrapper}/bin/treefmt --fail-on-change";
+            };
+
+            pip-compile = {
+              enable = true;
+              package = pkgs.python3Packages.pip-tools;
+              entry = "${pkgs.python3Packages.pip-tools}/bin/pip-compile requirements-dev.in";
+              description = "Automatically compile requirements.";
+              name = "pip-compile";
+              files = "^requirements-dev\\.(in|txt)$";
+              pass_filenames = false;
+            };
+
+            pyright.enable = true;
+            pyright.args = [
+              "--pythonpath"
+              ".venv/bin/python"
+            ];
+            yamllint.enable = true;
+          };
+        };
       in
       with pkgs;
       {
         devShells.default = mkShell {
           inherit buildInputs;
-          nativeBuildInputs = nativeBuildInputs ++ [
-            (treefmt-nix.lib.mkWrapper pkgs treefmt.config)
-          ];
+          shellHook = pre-commit.shellHook;
+          nativeBuildInputs =
+            nativeBuildInputs
+            ++ [
+              treefmtEval.config.build.wrapper
+              # Make formatters available for IDE's.
+              (lib.attrValues treefmtEval.config.build.programs)
+            ]
+            ++ pre-commit.enabledPackages;
           venvDir = "./.venv";
           postVenvCreation = ''
             pip-sync --python-executable .venv/bin/python requirements-dev.txt
@@ -97,23 +142,6 @@
             export LC_ALL="C.UTF-8";
             pip-sync --python-executable .venv/bin/python requirements-dev.txt
           '';
-          # devshell.startup.pre-commit.text =
-          #   (pre-commit-hooks.lib.${system}.run {
-          #     src = ./.;
-          #     hooks = {
-          #       check-format = {
-          #         enable = true;
-          #         entry = "treefmt --fail-on-change";
-          #       };
-          #       cargo-clippy = {
-          #         enable = true;
-          #         description = "Lint Rust code.";
-          #         entry = "cargo-clippy --workspace -- -D warnings";
-          #         files = "\\.rs$";
-          #         pass_filenames = false;
-          #       };
-          #     };
-          #   }).shellHook;
         };
         packages = {
           default = pkgs.micropython;

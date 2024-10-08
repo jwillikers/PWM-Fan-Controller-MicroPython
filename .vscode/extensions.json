@@ -3,6 +3,7 @@
         "charliermarsh.ruff",
         "ms-python.vscode-pylance",
         "ms-python.python",
-        "mkhl.direnv"
+        "mkhl.direnv",
+        "ibecker.treefmt-vscode"
     ]
 }
