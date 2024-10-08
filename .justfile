@@ -10,7 +10,6 @@ init-dev: && sync
     [ -d .venv ] || python -m venv .venv
     .venv/bin/python -m pip install pip-tools
     .venv/bin/python -m pip install --requirement requirements-dev.txt
-    .venv/bin/pre-commit install
 
 install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
@@ -35,4 +34,3 @@ alias up := update
 
 update:
     source .venv/bin/activate && pip-compile requirements-dev.in
-    .venv/bin/pre-commit autoupdate
