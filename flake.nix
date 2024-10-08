@@ -152,7 +152,6 @@
       {
         devShells.default = mkShell {
           inherit buildInputs;
-          shellHook = pre-commit.shellHook;
           nativeBuildInputs =
             nativeBuildInputs
             ++ [
@@ -166,10 +165,12 @@
             pip-sync --python-executable .venv/bin/python requirements-dev.txt
           '';
           # https://github.com/NixOS/nixpkgs/issues/223151
-          postShellHook = ''
-            export LC_ALL="C.UTF-8";
-            pip-sync --python-executable .venv/bin/python requirements-dev.txt
-          '';
+          postShellHook =
+            ''
+              export LC_ALL="C.UTF-8";
+              pip-sync --python-executable .venv/bin/python requirements-dev.txt
+            ''
+            + pre-commit.shellHook;
         };
         packages = {
           default = pkgs.micropython;
