@@ -85,15 +85,9 @@
               options = [
                 "-euc"
                 ''
-                  export LC_ALL="C.UTF-8"
-                  found_geolocation_metadata=0
                   for file in "$@"; do
-                    if [[ "$found_geolocation_metadata" -eq "0" && $(${pkgs.exiftool}/bin/exiftool -quiet '-gps*' "$file") ]]; then
-                      found_geolocation_metadata=1
-                    fi
-                    ${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original '-gps*=' "$file"
+                    ${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original "-gps*=" "$file"
                   done
-                  exit $found_geolocation_metadata
                 ''
                 "--" # bash swallows the second argument when using -c
               ];
