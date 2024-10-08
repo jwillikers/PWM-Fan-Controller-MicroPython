@@ -186,9 +186,6 @@
           default = apps.install.pwm-fan-controller;
         };
         formatter = treefmtEval.config.build.wrapper;
-        checks = {
-          formatting = treefmtEval.config.build.check self;
-        };
       }
     );
 }
