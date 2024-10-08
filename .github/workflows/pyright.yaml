@@ -22,4 +22,4 @@ jobs:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv
       - name: Check Python code with Pyright
-        run: nix develop --command .venv/bin/pyright --warnings
+        run: nix develop --command pyright --pythonpath .venv/bin/python --warnings
