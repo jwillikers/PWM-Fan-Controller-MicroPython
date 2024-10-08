@@ -69,6 +69,7 @@
         treefmt.config = {
           projectRootFile = "flake.nix";
           programs = {
+            actionlint.enable = true;
             # jsonfmt.enable = true;
             just.enable = true;
             # todo
