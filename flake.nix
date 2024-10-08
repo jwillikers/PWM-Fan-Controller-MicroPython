@@ -68,7 +68,6 @@
         treefmt.config = {
           programs = {
             actionlint.enable = true;
-            # image-geolocation-metadata.enable = true;
             # jsonfmt.enable = true;
             just.enable = true;
             # todo
@@ -81,13 +80,13 @@
           };
           projectRootFile = "flake.nix";
           settings.formatter = {
-            "strip-image-gps-metadata" = {
+            "strip-gps-metadata" = {
               command = "${pkgs.bash}/bin/bash";
               options = [
                 "-euc"
                 ''
                   for file in "$@"; do
-                    ${pkgs.exiftool}/bin/exiftool "-gps*=" "$file"
+                    ${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original "-gps*=" "$file"
                   done
                 ''
                 "--" # bash swallows the second argument when using -c
@@ -126,22 +125,6 @@
             fix-byte-order-marker.enable = true;
             flake-checker.enable = true;
             mixed-line-endings.enable = true;
-
-            # mogrify-strip = {
-            #   enable = true;
-            #   package = pkgs.python3Packages.pip-tools;
-            #   entry = "${pkgs.python3Packages.pip-tools}/bin/pip-compile requirements-dev.in";
-            #   description = "Automatically compile requirements.";
-            #   name = "pip-compile";
-            #   files = "^requirements-dev\\.(in|txt)$";
-            #   pass_filenames = false;
-            # };
-
-            # - id: mogrify-strip
-            # entry: nix develop --command nu check-image-metadata.nu --strip
-            # language: system
-            # name: Strip Image Metadata
-            # types: [binary, file, image]
 
             pip-compile = {
               enable = true;
