@@ -1,22 +1,12 @@
-name: Ruff
+name: Check files with treefmt
 "on":
   pull_request:
     branches: ["main"]
-    paths:
-      - .github/workflows/ruff.yaml
-      - flake.lock
-      - pyproject.toml
-      - requirements-dev.txt
-      - '**.py'
-
-permissions:
-  checks: write
-  contents: read
-  issues: write
-  pull-requests: write
+  push:
+    branches: ["main"]
 
 jobs:
-  ruff:
+  treefmt:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,12 +17,10 @@ jobs:
         with:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv
-      - name: Format with Ruff
-        run: nix develop --command ruff format
-      - name: Fix Ruff checks
-        run: nix develop --command ruff check --fix
+      - name: Run treefmt
+        run: nix develop --command treefmt --ci
       - uses: reviewdog/action-suggester@v1
         with:
           fail_on_error: true
           github_token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
-          tool_name: ruff
+          tool_name: treefmt

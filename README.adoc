@@ -17,11 +17,9 @@ endif::[]
 :nix-direnv: https://github.com/nix-community/nix-direnv[nix-direnv]
 :Noctua-NF-P12-redux-1700-PWM-Fan: https://noctua.at/en/nf-p12-redux-1700-pwm[Noctua NF-P12 redux-1700 PWM Fan]
 :pip-tools: https://github.com/jazzband/pip-tools[pip-tools]
-:pre-commit: https://pre-commit.com/[pre-commit]
 :Python: https://www.python.org/[Python]
 :Raspberry-Pi-Pico: https://www.raspberrypi.com/products/raspberry-pi-pico/[Raspberry Pi Pico]
 
-image:https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white[pre-commit, link=https://github.com/pre-commit/pre-commit]
 image:https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json[Ruff, link=https://github.com/astral-sh/ruff]
 
 A simple PWM fan controller for the {Raspberry-Pi-Pico}, written in {MicroPython}.
@@ -194,7 +192,7 @@ Currently, Nix is just using a virtual environment with the dependencies from th
 The `nix develop` command can be used to enter or run commands in an environment with all of the necessary dependencies.
 For convenience, direnv can be used to automatically load this environment when entering the project's directory.
 The https://marketplace.visualstudio.com/items?itemName=mkhl.direnv[mkhl.direnv VSCode extension] integrates this environment in VSCode for development.
-The repository contains configuration for https://pre-commit.com/[pre-commit], which can be used to automate formatting and various checks when committing changes.
+Nix also generates the configuration for https://pre-commit.com/[pre-commit], which automates formatting and various checks when committing changes.
 Follow the instructions here to set up your development environment using Nix.
 
 . Install an implementation of {Nix}, such as https://lix.systems[Lix] used here.
@@ -219,13 +217,6 @@ sudo systemctl reboot
 [,sh]
 ----
 direnv allow
-----
-
-. Run `pre-commit install` to configure pre-commit hooks in the repository.
-+
-[,sh]
-----
-pre-commit install
 ----
 
 There are a couple of Nix commands available for common tasks.
@@ -282,7 +273,7 @@ just --list
 
 == References
 
-* https://www.ti.com/lit/ds/symlink/sn74ahct125.pdf[1787AHC125 Datasheet]
+* https://www.ti.com/lit/ds/symlink/sn74ahct125.pdf[SN74AHCT125 Datasheet]
 * https://en.wikipedia.org/wiki/Computer_fan_control#Pulse-width_modulation[Computer Fan Control: Pulse-width modulation]
 * https://docs.micropython.org/en/latest/rp2/quickref.html#pwm-pulse-width-modulation[MicroPython Quick reference for the RP2: PWM (pulse width modulation)]
 * https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf[RP2040 Datasheet]

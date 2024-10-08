@@ -4,20 +4,20 @@ alias f := format
 alias fmt := format
 
 format:
-    .venv/bin/ruff format .
-    just --fmt --unstable
+    treefmt
 
 init-dev: && sync
     [ -d .venv ] || python -m venv .venv
     .venv/bin/python -m pip install pip-tools
     .venv/bin/python -m pip install --requirement requirements-dev.txt
-    .venv/bin/pre-commit install
 
 install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
 
-install tty="": init-dev
-    .venv/bin/rshell {{ if tty != "" { "--port " + tty } else { "" } }} cp main.py /pyboard/
+install device="":
+    #!/usr/bin/env sh
+    tty=$(.venv/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
+    .venv/bin/mpremote connect {{ if device == "" { "port:$tty" } else { device } }} fs cp main.py :
 
 alias l := lint
 
@@ -34,4 +34,3 @@ alias up := update
 
 update:
     source .venv/bin/activate && pip-compile requirements-dev.in
-    .venv/bin/pre-commit autoupdate
