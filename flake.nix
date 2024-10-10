@@ -119,6 +119,7 @@
             };
 
             detect-private-keys.enable = true;
+            editorconfig-checker.enable = true;
             end-of-file-fixer.enable = true;
             fix-byte-order-marker.enable = true;
             flake-checker.enable = true;
@@ -197,7 +198,8 @@
                   name = "install-pwm-fan-controller";
                   runtimeInputs = with pkgs; [ mpremote ];
                   text = ''
-                    tty=$(${pkgs.mpremote}/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
+                    tty=$(${pkgs.mpremote}/bin/mpremote devs \
+                      | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
                     ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${
                       self.packages.${system}.pwm-fan-controller-micropython
                     }/bin/main.py :
