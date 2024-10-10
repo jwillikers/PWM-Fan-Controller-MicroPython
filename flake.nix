@@ -72,6 +72,7 @@
             nixfmt.enable = true;
             ruff-check.enable = true;
             ruff-format.enable = true;
+            statix.enable = true;
             taplo.enable = true;
             typos.enable = true;
             yamlfmt.enable = true;
@@ -170,7 +171,7 @@
         };
         packages = {
           default = pkgs.micropython;
-          micropython = pkgs.micropython;
+          inherit (pkgs) micropython;
           pwm-fan-controller = callPackage ./default.nix { };
         };
         apps = {
