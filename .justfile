@@ -1,5 +1,14 @@
 default: install
 
+alias c := check
+
+check:
+    .venv/bin/yamllint .
+    .venv/bin/ruff check --fix .
+    .venv/bin/pyright --warnings
+    asciidoctor **/*.adoc
+    lychee --cache **/*.html
+
 alias f := format
 alias fmt := format
 
@@ -20,13 +29,6 @@ install device="":
     #!/usr/bin/env sh
     tty=$(.venv/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
     .venv/bin/mpremote connect {{ if device == "" { "port:$tty" } else { device } }} fs cp main.py :
-
-alias l := lint
-
-lint:
-    .venv/bin/yamllint .
-    .venv/bin/ruff check --fix .
-    .venv/bin/pyright --warnings
 
 sync:
     source .venv/bin/activate && pip-sync --python-executable .venv/bin/python requirements-dev.txt

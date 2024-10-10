@@ -17,3 +17,9 @@ result
 
 # git-hooks.nix
 /.pre-commit-config.yaml
+
+# lychee
+.lycheecache
+
+# Asciidoctor
+*.html

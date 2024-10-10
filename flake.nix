@@ -48,6 +48,7 @@
           inherit system overlays;
         };
         nativeBuildInputs = with pkgs; [
+          asciidoctor
           fish
           just
           micropython
