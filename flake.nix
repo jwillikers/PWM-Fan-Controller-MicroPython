@@ -66,7 +66,7 @@
         treefmt.config = {
           programs = {
             actionlint.enable = true;
-            # jsonfmt.enable = true;
+            jsonfmt.enable = true;
             just.enable = true;
             # todo
             # mypy.enable = true;
@@ -74,7 +74,7 @@
             ruff-check.enable = true;
             ruff-format.enable = true;
             taplo.enable = true;
-            # yamlfmt.enable = true;
+            yamlfmt.enable = true;
           };
           projectRootFile = "flake.nix";
           settings.formatter = {
