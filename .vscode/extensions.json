@@ -10,6 +10,7 @@
     "bbenoist.nix",
     "tekumara.typos-vscode",
     "nefrob.vscode-just-syntax",
-    "thenuprojectcontributors.vscode-nushell-lang"
+    "thenuprojectcontributors.vscode-nushell-lang",
+    "jnoortheen.nix-ide"
   ]
 }
