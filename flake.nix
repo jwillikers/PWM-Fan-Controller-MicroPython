@@ -77,33 +77,8 @@
             yamlfmt.enable = true;
           };
           projectRootFile = "flake.nix";
-          settings.formatter = {
-            "strip-gps-metadata" = {
-              command = "${pkgs.bash}/bin/bash";
-              options = [
-                "-euc"
-                ''
-                  for file in "$@"; do
-                    ${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original "-gps*=" "$file"
-                  done
-                ''
-                "--" # bash swallows the second argument when using -c
-              ];
-              includes = [
-                "*.avif"
-                "*.bmp"
-                "*.gif"
-                "*.jpeg"
-                "*.jpg"
-                "*.png"
-                "*.svg"
-                "*.tiff"
-                "*.webp"
-              ];
-            };
-          };
         };
-        treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt.config;
+        treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt;
         pre-commit = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
@@ -141,6 +116,15 @@
                 ".venv/bin/python"
               ];
               enable = true;
+            };
+
+            strip-location-metadata = {
+              name = "Strip location metadata";
+              description = "Strip geolocation metadata from image files";
+              enable = true;
+              entry = "${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original '-gps*='";
+              package = pkgs.exiftool;
+              types = [ "image" ];
             };
             trim-trailing-whitespace.enable = true;
             yamllint.enable = true;
