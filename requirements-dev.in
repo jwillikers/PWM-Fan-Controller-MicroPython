@@ -1,6 +1,3 @@
 micropython-rp2-pico-stubs
 mpremote
 pip-tools
-pyright
-ruff
-yamllint

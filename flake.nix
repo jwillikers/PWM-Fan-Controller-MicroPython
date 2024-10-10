@@ -58,8 +58,6 @@
           python3Packages.python
           python3Packages.pip-tools
           python3Packages.venvShellHook
-          # ruff
-          # yamllint
         ];
         buildInputs =
           with pkgs;
