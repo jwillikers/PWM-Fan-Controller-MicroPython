@@ -12,7 +12,9 @@ init-dev: && sync
     .venv/bin/python -m pip install --requirement requirements-dev.txt
 
 install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
-    curl --location --output-dir /run/media/$(id --name --user)/RPI-RP2 --remote-name https://micropython.org/resources/firmware/{{ file }}
+    curl --location \
+        --output-dir /run/media/$(id --name --user)/RPI-RP2 \
+        --remote-name "https://micropython.org/resources/firmware/{{ file }}"
 
 install device="":
     #!/usr/bin/env sh

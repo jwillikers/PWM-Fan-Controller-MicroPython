@@ -95,6 +95,9 @@
         pre-commit = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
+            check-added-large-files.enable = true;
+            check-builtin-literals.enable = true;
+            check-case-conflicts.enable = true;
             check-executables-have-shebangs.enable = true;
 
             # todo Not integrated with Nix?
@@ -104,6 +107,8 @@
             };
 
             check-json.enable = true;
+            check-python.enable = true;
+            check-shebang-scripts-are-executable.enable = true;
             check-toml.enable = true;
             check-yaml.enable = true;
             deadnix.enable = true;
@@ -112,6 +117,10 @@
             end-of-file-fixer.enable = true;
             fix-byte-order-marker.enable = true;
             flake-checker.enable = true;
+            forbid-new-submodules.enable = true;
+            # todo Enable lychee when asciidoc is supported.
+            # See https://github.com/lycheeverse/lychee/issues/291
+            # lychee.enable = true;
             mixed-line-endings.enable = true;
             nil.enable = true;
 
@@ -132,6 +141,8 @@
               ];
               enable = true;
             };
+            python-debug-statements.enable = true;
+            pyupgrade.enable = true;
 
             strip-location-metadata = {
               name = "Strip location metadata";
