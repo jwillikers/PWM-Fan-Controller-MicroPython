@@ -51,6 +51,7 @@
           fish
           just
           micropython
+          nil
           nushell
           # todo Should everything be pulled in via Nix or pip-tools?
           # mpremote
@@ -59,7 +60,6 @@
           python3Packages.venvShellHook
         ];
         buildInputs =
-          with pkgs;
           [
           ];
         treefmt.config = {
@@ -113,6 +113,7 @@
             fix-byte-order-marker.enable = true;
             flake-checker.enable = true;
             mixed-line-endings.enable = true;
+            nil.enable = true;
 
             pip-compile = {
               enable = true;
