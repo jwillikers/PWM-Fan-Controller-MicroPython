@@ -22,7 +22,7 @@
       system:
       let
         overlays = [
-          (final: prev: {
+          (_final: prev: {
             # Build MicroPython for the rp2-pico
             micropython = prev.micropython.overrideAttrs (old: {
               nativeBuildInputs = old.nativeBuildInputs ++ [
@@ -73,8 +73,21 @@
             ruff-check.enable = true;
             ruff-format.enable = true;
             taplo.enable = true;
+            typos.enable = true;
             yamlfmt.enable = true;
           };
+          settings.formatter.typos.excludes = [
+            "*.avif"
+            "*.bmp"
+            "*.gif"
+            "*.jpeg"
+            "*.jpg"
+            "*.png"
+            "*.svg"
+            "*.tiff"
+            "*.webp"
+            ".vscode/settings.json"
+          ];
           projectRootFile = "flake.nix";
         };
         treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt;
@@ -82,9 +95,6 @@
           src = ./.;
           hooks = {
             check-executables-have-shebangs.enable = true;
-            check-json.enable = true;
-            check-toml.enable = true;
-            check-yaml.enable = true;
 
             # todo Not integrated with Nix?
             check-format = {
@@ -92,6 +102,10 @@
               entry = "${treefmtEval.config.build.wrapper}/bin/treefmt --fail-on-change";
             };
 
+            check-json.enable = true;
+            check-toml.enable = true;
+            check-yaml.enable = true;
+            deadnix.enable = true;
             detect-private-keys.enable = true;
             editorconfig-checker.enable = true;
             end-of-file-fixer.enable = true;
