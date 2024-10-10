@@ -54,7 +54,6 @@
           nushell
           # todo Should everything be pulled in via Nix or pip-tools?
           # mpremote
-          # pyright
           python3Packages.python
           python3Packages.pip-tools
           python3Packages.venvShellHook
