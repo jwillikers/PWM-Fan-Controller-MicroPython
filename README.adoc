@@ -221,13 +221,6 @@ direnv allow
 
 There are a couple of Nix commands available for common tasks.
 
-. Build MicroPython by building the `micropython` build output.
-+
-[,sh]
-----
-nix build '.#micropython'
-----
-
 . Install MicroPython by running the `micropython` app output.
 +
 [,sh]
@@ -235,7 +228,7 @@ nix build '.#micropython'
 nix run '.#micropython'
 ----
 
-. Install the fan controller firmware by running the `pwm-fan-controller` app output, after mounting the Pico in bootloader mode of course.
+. Install the fan controller firmware by running the `pwm-fan-controller` app output.
 +
 [,sh]
 ----
