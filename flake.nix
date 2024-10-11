@@ -210,9 +210,14 @@
                   name = "install-pwm-fan-controller";
                   runtimeInputs = with pkgs; [ mpremote ];
                   text = ''
+                    set -euxo pipefail
                     tty=$(${pkgs.mpremote}/bin/mpremote devs \
                       | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-                    ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${
+                    port_option=""
+                    if [ -n "''${tty+x}" ]; then
+                      port_option="port:$tty"
+                    fi
+                    ${pkgs.mpremote}/bin/mpremote connect "$port_option" fs cp ${
                       self.packages.${system}.pwm-fan-controller
                     }/bin/main.py :
                   '';

@@ -22,8 +22,13 @@ init-dev: && sync
 
 install device="":
     #!/usr/bin/env sh
+    set -euxo pipefail
     tty=$(.venv/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-    .venv/bin/mpremote connect {{ if device == "" { "port:$tty" } else { device } }} fs cp main.py :
+    port_option=""
+    if [ -n "${tty+x}" ]; then
+        port_option="port:$tty"
+    fi
+    .venv/bin/mpremote connect {{ if device == "" { "\"$port_option\"" } else { device } }} fs cp main.py :
 
 install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
     curl --location \
