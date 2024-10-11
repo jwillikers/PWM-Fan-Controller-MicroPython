@@ -2,9 +2,6 @@
 
 # https://github.com/nix-community/nix-direnv
 
-# get_latest_nix_direnv_release
-# get_latest_nix_direnv_release
-
 # Get the newest version of nix-direnv.
 def get_latest_nix_direnv_version [] [ nothing -> string ] {
   http get https://api.github.com/repos/nix-community/nix-direnv/releases/latest | get name

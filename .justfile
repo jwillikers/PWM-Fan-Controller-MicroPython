@@ -3,11 +3,11 @@ default: install
 alias c := check
 
 check:
-    .venv/bin/yamllint .
-    .venv/bin/ruff check --fix .
-    .venv/bin/pyright --warnings
-    asciidoctor **/*.adoc
-    lychee --cache **/*.html
+    yamllint .
+    ruff check --fix .
+    pyright --warnings
+    asciidoctor --destination-dir asciidoctor-html **/*.adoc
+    lychee --cache asciidoctor-html/**/*.html
 
 alias f := format
 alias fmt := format
@@ -37,4 +37,6 @@ alias u := update
 alias up := update
 
 update:
+    nix flake update
+    nu update-nix-direnv.nu
     source .venv/bin/activate && pip-compile requirements-dev.in

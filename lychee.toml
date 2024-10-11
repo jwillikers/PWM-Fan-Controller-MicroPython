@@ -1,2 +1,6 @@
 cache = true
+exclude = [
+  # Ignore references between Asciidoc files.
+  '\.adoc$',
+]
 max_cache_age = "2w"
