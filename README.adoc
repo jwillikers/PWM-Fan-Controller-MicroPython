@@ -315,8 +315,8 @@ Wait until support is better to implement this functionality.
 * https://en.wikipedia.org/wiki/Computer_fan_control#Pulse-width_modulation[Computer Fan Control: Pulse-width modulation]
 * https://docs.micropython.org/en/latest/rp2/quickref.html#pwm-pulse-width-modulation[MicroPython Quick reference for the RP2: PWM (pulse width modulation)]
 * https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf[RP2040 Datasheet]
-* https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html[Raspberry Pi Pico Documentation]
-* https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files[Raspberry Pi Pico Pinout]
+* https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico-1-family[Raspberry Pi Pico Documentation]
+* https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pinout-and-design-files-2[Raspberry Pi Pico Pinout]
 
 == Contributing
 

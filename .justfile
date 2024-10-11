@@ -6,8 +6,8 @@ check: && format
     yamllint .
     ruff check --fix .
     pyright --warnings
-    asciidoctor --destination-dir asciidoctor-html **/*.adoc
-    lychee --cache asciidoctor-html/**/*.html
+    asciidoctor **/*.adoc
+    lychee --cache **/*.html
 
 alias f := format
 alias fmt := format

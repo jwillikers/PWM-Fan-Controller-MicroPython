@@ -52,6 +52,7 @@
           asciidoctor
           fish
           just
+          lychee
           micropython
           nil
           nushell
