@@ -31,6 +31,7 @@
     "micropython",
     "MOSI",
     "mpremote",
+    "mypy",
     "Noctua",
     "Optimziations",
     "ostree",

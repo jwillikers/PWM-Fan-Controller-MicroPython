@@ -271,6 +271,12 @@ just update
 just --list
 ----
 
+== Todo
+
+. Use mypy to enforce static typing.
+Unfortunately, mypy is not able to properly load the MicroPython stubs.
+Wait until support is better to implement this functionality.
+
 == References
 
 * https://www.ti.com/lit/ds/symlink/sn74ahct125.pdf[SN74AHCT125 Datasheet]
