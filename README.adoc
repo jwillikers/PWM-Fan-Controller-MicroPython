@@ -167,19 +167,31 @@ cd PWM-Fan-Controller-MicroPython
 
 . Run `just install` to install the firmware to the Pico.
 +
+--
 [,sh]
 ----
 just install
 ----
 
+[NOTE]
+====
+If you previously installed the firmware, you must install the firmware or connect to the board with the `mpremote` command within the first fifteen seconds after plugging in the board.
+This is because the board will start sleeping in small intervals to reduce power usage.
+====
+--
+
 . Once the previous command finishes, you may unplug the board.
 
 == Development
 
+The following instructions describe how to set up a local development environment and perform development tasks.
+
+=== Development Environment
+
 It's possible to use a development environment from {Nix} or from a standard Python virtual environment.
 Both methods are described in the following sections.
 
-=== Nix
+==== Nix
 
 I've added development environment and some helpers using {Nix}.
 Honestly, with {pip-tools} and a hard-coded version of MicroPython, this project is already very reproducible.
@@ -235,7 +247,7 @@ nix run '.#micropython'
 nix run '.#pwm-fan-controller'
 ----
 
-=== Virtual Environment
+==== Virtual Environment
 
 . Run `just init-dev` to initialize the virtual environment for development.
 This will install all of the necessary dependencies and the {pre-commit} hooks.
@@ -245,10 +257,37 @@ This will install all of the necessary dependencies and the {pre-commit} hooks.
 just init-dev
 ----
 
+=== Develop
+
+The easiest way to test code on the device is to use mount the repository on the device and execute the code from there.
+The following code demonstrates how to use the `mpremote` command to do just this.
+
+[,sh]
+----
+mpremote connect mount . exec "import main"
+----
+
+It's also possible to run a repl instead by omitting the second command.
+
+[,sh]
+----
+mpremote connect mount .
+----
+
+For more information on how to use `mpremote`, check out the https://docs.micropython.org/en/latest/reference/mpremote.html[MicroPython remote control: mpremote] page of the MicroPython documentation.
+
 === Just
 
 Many of the necessary tasks for development have dedicated just commands.
 Here is the briefest overview.
+
+. For local development, the `just run` command can be used to run commands after mounting the local directory on the device.
+By default, it it will execute the main.py file, but other commands to `mpremote` can be provided as the first argument.
++
+[,sh]
+----
+just run
+----
 
 . To update dependencies, run `just update`.
 +
