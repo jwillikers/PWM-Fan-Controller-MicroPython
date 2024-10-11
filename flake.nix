@@ -12,6 +12,7 @@
   };
   outputs =
     {
+      # deadnix: skip
       self,
       nixpkgs,
       flake-utils,
