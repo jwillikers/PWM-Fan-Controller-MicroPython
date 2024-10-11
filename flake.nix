@@ -213,7 +213,7 @@
                     tty=$(${pkgs.mpremote}/bin/mpremote devs \
                       | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
                     ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${
-                      self.packages.${system}.pwm-fan-controller-micropython
+                      self.packages.${system}.pwm-fan-controller
                     }/bin/main.py :
                   '';
                 };
@@ -223,7 +223,7 @@
                 program = "${script}/bin/install-pwm-fan-controller";
               };
           };
-          default = apps.install.pwm-fan-controller;
+          default = self.apps.${system}.install.pwm-fan-controller;
         };
         formatter = treefmtEval.config.build.wrapper;
       }
