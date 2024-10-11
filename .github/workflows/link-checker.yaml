@@ -1,0 +1,39 @@
+name: Check URLs with Lychee
+
+"on":
+  pull_request:
+    branches: [main]
+    paths:
+      - .github/workflows/link-checker.yaml
+      - flake.lock
+      - '**.adoc'
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/link-checker.yaml
+      - flake.lock
+      - '**.adoc'
+  schedule:
+    # Run once a month on the 14th.
+    - cron: "0 0 14 * *"
+  workflow_dispatch:
+
+jobs:
+  link-checker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Restore lychee cache
+        uses: actions/cache@v4
+        with:
+          path: .lycheecache
+          key: cache-lychee-${{ github.sha }}
+          restore-keys: cache-lychee-
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v14
+      - uses: DeterminateSystems/magic-nix-cache-action@v8
+      - name: Convert the Asciidoc files to html
+        run: nix develop --command asciidoctor ./**/*.adoc
+      - name: Run lychee on the generated site
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: nix develop --command lychee --cache --no-progress --verbose ./**/*.html

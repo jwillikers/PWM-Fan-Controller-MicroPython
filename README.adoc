@@ -167,19 +167,31 @@ cd PWM-Fan-Controller-MicroPython
 
 . Run `just install` to install the firmware to the Pico.
 +
+--
 [,sh]
 ----
 just install
 ----
 
+[NOTE]
+====
+If you previously installed the firmware, you must install the firmware or connect to the board with the `mpremote` command within the first fifteen seconds after plugging in the board.
+This is because the board will start sleeping in small intervals to reduce power usage.
+====
+--
+
 . Once the previous command finishes, you may unplug the board.
 
 == Development
 
+The following instructions describe how to set up a local development environment and perform development tasks.
+
+=== Development Environment
+
 It's possible to use a development environment from {Nix} or from a standard Python virtual environment.
 Both methods are described in the following sections.
 
-=== Nix
+==== Nix
 
 I've added development environment and some helpers using {Nix}.
 Honestly, with {pip-tools} and a hard-coded version of MicroPython, this project is already very reproducible.
@@ -221,13 +233,6 @@ direnv allow
 
 There are a couple of Nix commands available for common tasks.
 
-. Build MicroPython by building the `micropython` build output.
-+
-[,sh]
-----
-nix build '.#micropython'
-----
-
 . Install MicroPython by running the `micropython` app output.
 +
 [,sh]
@@ -235,14 +240,14 @@ nix build '.#micropython'
 nix run '.#micropython'
 ----
 
-. Install the fan controller firmware by running the `pwm-fan-controller` app output, after mounting the Pico in bootloader mode of course.
+. Install the fan controller firmware by running the `pwm-fan-controller` app output.
 +
 [,sh]
 ----
 nix run '.#pwm-fan-controller'
 ----
 
-=== Virtual Environment
+==== Virtual Environment
 
 . Run `just init-dev` to initialize the virtual environment for development.
 This will install all of the necessary dependencies and the {pre-commit} hooks.
@@ -252,10 +257,37 @@ This will install all of the necessary dependencies and the {pre-commit} hooks.
 just init-dev
 ----
 
+=== Develop
+
+The easiest way to test code on the device is to use mount the repository on the device and execute the code from there.
+The following code demonstrates how to use the `mpremote` command to do just this.
+
+[,sh]
+----
+mpremote connect mount . exec "import main"
+----
+
+It's also possible to run a repl instead by omitting the second command.
+
+[,sh]
+----
+mpremote connect mount .
+----
+
+For more information on how to use `mpremote`, check out the https://docs.micropython.org/en/latest/reference/mpremote.html[MicroPython remote control: mpremote] page of the MicroPython documentation.
+
 === Just
 
 Many of the necessary tasks for development have dedicated just commands.
 Here is the briefest overview.
+
+. For local development, the `just run` command can be used to run commands after mounting the local directory on the device.
+By default, it it will execute the main.py file, but other commands to `mpremote` can be provided as the first argument.
++
+[,sh]
+----
+just run
+----
 
 . To update dependencies, run `just update`.
 +
@@ -271,14 +303,20 @@ just update
 just --list
 ----
 
+== Todo
+
+. Use mypy to enforce static typing.
+Unfortunately, mypy is not able to properly load the MicroPython stubs.
+Wait until support is better to implement this functionality.
+
 == References
 
 * https://www.ti.com/lit/ds/symlink/sn74ahct125.pdf[SN74AHCT125 Datasheet]
 * https://en.wikipedia.org/wiki/Computer_fan_control#Pulse-width_modulation[Computer Fan Control: Pulse-width modulation]
 * https://docs.micropython.org/en/latest/rp2/quickref.html#pwm-pulse-width-modulation[MicroPython Quick reference for the RP2: PWM (pulse width modulation)]
 * https://datasheets.raspberrypi.com/rp2040/rp2040-datasheet.pdf[RP2040 Datasheet]
-* https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html[Raspberry Pi Pico Documentation]
-* https://www.raspberrypi.com/documentation/microcontrollers/raspberry-pi-pico.html#pinout-and-design-files[Raspberry Pi Pico Pinout]
+* https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pico-1-family[Raspberry Pi Pico Documentation]
+* https://www.raspberrypi.com/documentation/microcontrollers/pico-series.html#pinout-and-design-files-2[Raspberry Pi Pico Pinout]
 
 == Contributing
 

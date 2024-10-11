@@ -1,0 +1,9 @@
+# Due to rate limiting from digikey.com and gnu.org
+accept = [429]
+
+cache = true
+exclude = [
+  # Raspberry Pi's website returns 403 forbidden codes.
+  '^https://www.raspberrypi.com',
+]
+max_cache_age = "2w"

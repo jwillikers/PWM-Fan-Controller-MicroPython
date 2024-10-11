@@ -12,6 +12,7 @@
   };
   outputs =
     {
+      # deadnix: skip
       self,
       nixpkgs,
       flake-utils,
@@ -22,7 +23,7 @@
       system:
       let
         overlays = [
-          (final: prev: {
+          (_final: prev: {
             # Build MicroPython for the rp2-pico
             micropython = prev.micropython.overrideAttrs (old: {
               nativeBuildInputs = old.nativeBuildInputs ++ [
@@ -48,71 +49,59 @@
           inherit system overlays;
         };
         nativeBuildInputs = with pkgs; [
+          asciidoctor
           fish
           just
+          lychee
           micropython
+          nil
           nushell
           # todo Should everything be pulled in via Nix or pip-tools?
           # mpremote
-          # pyright
           python3Packages.python
           python3Packages.pip-tools
           python3Packages.venvShellHook
-          # ruff
-          # yamllint
         ];
         buildInputs =
-          with pkgs;
           [
           ];
         treefmt.config = {
           programs = {
             actionlint.enable = true;
-            # jsonfmt.enable = true;
+            jsonfmt.enable = true;
             just.enable = true;
             # todo
             # mypy.enable = true;
             nixfmt.enable = true;
             ruff-check.enable = true;
             ruff-format.enable = true;
+            statix.enable = true;
             taplo.enable = true;
-            # yamlfmt.enable = true;
+            typos.enable = true;
+            yamlfmt.enable = true;
           };
+          settings.formatter.typos.excludes = [
+            "*.avif"
+            "*.bmp"
+            "*.gif"
+            "*.jpeg"
+            "*.jpg"
+            "*.png"
+            "*.svg"
+            "*.tiff"
+            "*.webp"
+            ".vscode/settings.json"
+          ];
           projectRootFile = "flake.nix";
-          settings.formatter = {
-            "strip-gps-metadata" = {
-              command = "${pkgs.bash}/bin/bash";
-              options = [
-                "-euc"
-                ''
-                  for file in "$@"; do
-                    ${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original "-gps*=" "$file"
-                  done
-                ''
-                "--" # bash swallows the second argument when using -c
-              ];
-              includes = [
-                "*.avif"
-                "*.bmp"
-                "*.gif"
-                "*.jpeg"
-                "*.jpg"
-                "*.png"
-                "*.svg"
-                "*.tiff"
-                "*.webp"
-              ];
-            };
-          };
         };
-        treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt.config;
+        treefmtEval = treefmt-nix.lib.evalModule pkgs treefmt;
         pre-commit = pre-commit-hooks.lib.${system}.run {
           src = ./.;
           hooks = {
+            check-added-large-files.enable = true;
+            check-builtin-literals.enable = true;
+            check-case-conflicts.enable = true;
             check-executables-have-shebangs.enable = true;
-            check-json.enable = true;
-            check-toml.enable = true;
-            check-yaml.enable = true;
 
             # todo Not integrated with Nix?
             check-format = {
@@ -120,11 +109,23 @@
               entry = "${treefmtEval.config.build.wrapper}/bin/treefmt --fail-on-change";
             };
 
+            check-json.enable = true;
+            check-python.enable = true;
+            check-shebang-scripts-are-executable.enable = true;
+            check-toml.enable = true;
+            check-yaml.enable = true;
+            deadnix.enable = true;
             detect-private-keys.enable = true;
+            editorconfig-checker.enable = true;
             end-of-file-fixer.enable = true;
             fix-byte-order-marker.enable = true;
             flake-checker.enable = true;
+            forbid-new-submodules.enable = true;
+            # todo Enable lychee when asciidoc is supported.
+            # See https://github.com/lycheeverse/lychee/issues/291
+            # lychee.enable = true;
             mixed-line-endings.enable = true;
+            nil.enable = true;
 
             pip-compile = {
               enable = true;
@@ -142,6 +143,17 @@
                 ".venv/bin/python"
               ];
               enable = true;
+            };
+            python-debug-statements.enable = true;
+            pyupgrade.enable = true;
+
+            strip-location-metadata = {
+              name = "Strip location metadata";
+              description = "Strip geolocation metadata from image files";
+              enable = true;
+              entry = "${pkgs.exiftool}/bin/exiftool -duplicates -overwrite_original '-gps*='";
+              package = pkgs.exiftool;
+              types = [ "image" ];
             };
             trim-trailing-whitespace.enable = true;
             yamllint.enable = true;
@@ -174,7 +186,7 @@
         };
         packages = {
           default = pkgs.micropython;
-          micropython = pkgs.micropython;
+          inherit (pkgs) micropython;
           pwm-fan-controller = callPackage ./default.nix { };
         };
         apps = {
@@ -199,9 +211,15 @@
                   name = "install-pwm-fan-controller";
                   runtimeInputs = with pkgs; [ mpremote ];
                   text = ''
-                    tty=$(${pkgs.mpremote}/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-                    ${pkgs.mpremote}/bin/mpremote connect "port:$tty" fs cp ${
-                      self.packages.${system}.pwm-fan-controller-micropython
+                    set -euxo pipefail
+                    tty=$(${pkgs.mpremote}/bin/mpremote devs \
+                      | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
+                    port_option=""
+                    if [ -n "''${tty+x}" ]; then
+                      port_option="port:$tty"
+                    fi
+                    ${pkgs.mpremote}/bin/mpremote connect "$port_option" fs cp ${
+                      self.packages.${system}.pwm-fan-controller
                     }/bin/main.py :
                   '';
                 };
@@ -211,7 +229,7 @@
                 program = "${script}/bin/install-pwm-fan-controller";
               };
           };
-          default = apps.install.pwm-fan-controller;
+          default = self.apps.${system}.install.pwm-fan-controller;
         };
         formatter = treefmtEval.config.build.wrapper;
       }
