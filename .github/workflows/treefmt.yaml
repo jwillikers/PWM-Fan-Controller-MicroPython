@@ -2,8 +2,34 @@ name: Check files with treefmt
 "on":
   pull_request:
     branches: ["main"]
+    paths:
+      - '**.json'
+      - '**.just'
+      - '**.json'
+      - '**.nix'
+      - '**.py'
+      - '**.toml'
+      - '**.yaml'
+      - '**.yml'
+      - '**/.justfile'
+      - '**/justfile'
+      - .github/workflows/treefmt.yaml
+      - flake.lock
   push:
     branches: ["main"]
+    paths:
+      - '**.json'
+      - '**.just'
+      - '**.json'
+      - '**.nix'
+      - '**.py'
+      - '**.toml'
+      - '**.yaml'
+      - '**.yml'
+      - '**/.justfile'
+      - '**/justfile'
+      - .github/workflows/treefmt.yaml
+      - flake.lock
 
 jobs:
   treefmt:

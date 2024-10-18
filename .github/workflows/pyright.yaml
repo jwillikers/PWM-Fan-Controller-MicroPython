@@ -9,6 +9,15 @@ name: Pyright
       - flake.lock
       - pyproject.toml
       - requirements-dev.txt
+  push:
+    branches: ["main"]
+    paths:
+      - '**.nix'
+      - '**.py'
+      - .github/workflows/pyright.yaml
+      - flake.lock
+      - pyproject.toml
+      - requirements-dev.txt
 
 jobs:
   pyright:
