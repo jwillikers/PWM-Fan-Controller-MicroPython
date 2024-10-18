@@ -17,7 +17,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v14
       - uses: DeterminateSystems/magic-nix-cache-action@v8
       - name: Update nix-direnv to the latest version
-        run: nix develop --command nu update-nix-direnv.nu
+        run: nix run '.#update-nix-direnv'
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
