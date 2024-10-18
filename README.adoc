@@ -17,6 +17,7 @@ endif::[]
 :nix-direnv: https://github.com/nix-community/nix-direnv[nix-direnv]
 :Noctua-NF-P12-redux-1700-PWM-Fan: https://noctua.at/en/nf-p12-redux-1700-pwm[Noctua NF-P12 redux-1700 PWM Fan]
 :pip-tools: https://github.com/jazzband/pip-tools[pip-tools]
+:pre-commit: https://github.com/nix-community/nixpkgs-update[pre-commit]
 :Python: https://www.python.org/[Python]
 :Raspberry-Pi-Pico: https://www.raspberrypi.com/products/raspberry-pi-pico/[Raspberry Pi Pico]
 
@@ -107,6 +108,20 @@ Now log out and back in for the change to take effect.
 
 . Install {just} by following the instructions in the https://github.com/casey/just?tab=readme-ov-file#installation[installation section].
 
+. Clone this project's repository.
++
+[,sh]
+----
+git clone https://github.com/jwillikers/PWM-Fan-Controller-MicroPython.git
+----
+
+. Change into the project directory.
++
+[,sh]
+----
+cd PWM-Fan-Controller-MicroPython
+----
+
 . Hold down the button marked _BOOTSEL_ on the board while plugging it in to your computer with a micro USB cable.
 
 . Mount the drive provided by the Pico.
@@ -151,20 +166,6 @@ This device resides under `/dev` on the filesystem.
 Note the name of the device shown in your output, since it will be used to copy the source code to the microcontroller's on-board filesystem.
 --
 
-. Clone this project's repository.
-+
-[,sh]
-----
-git clone https://github.com/jwillikers/PWM-Fan-Controller-MicroPython.git
-----
-
-. Change into the project directory.
-+
-[,sh]
-----
-cd PWM-Fan-Controller-MicroPython
-----
-
 . Run `just install` to install the firmware to the Pico.
 +
 --
@@ -204,7 +205,7 @@ Currently, Nix is just using a virtual environment with the dependencies from th
 The `nix develop` command can be used to enter or run commands in an environment with all of the necessary dependencies.
 For convenience, direnv can be used to automatically load this environment when entering the project's directory.
 The https://marketplace.visualstudio.com/items?itemName=mkhl.direnv[mkhl.direnv VSCode extension] integrates this environment in VSCode for development.
-Nix also generates the configuration for https://pre-commit.com/[pre-commit], which automates formatting and various checks when committing changes.
+Nix also generates the configuration for {pre-commit}, which automates formatting and various checks when committing changes.
 Follow the instructions here to set up your development environment using Nix.
 
 . Install an implementation of {Nix}, such as https://lix.systems[Lix] used here.

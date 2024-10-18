@@ -1,16 +1,9 @@
-__pycache__/
-.ruff_cache/
-.pytest_cache/
-typings/
-.venv/
-venv/
+# Asciidoctor
+*.html
 
 # Firmware
 *.elf
 *.uf2
-
-# Nix
-result
 
 # direnv
 .direnv/
@@ -21,5 +14,14 @@ result
 # lychee
 .lycheecache
 
-# Asciidoctor
-*.html
+# Nix
+result
+
+# Python
+__pycache__/
+.mypy_cache
+.pytest_cache/
+.ruff_cache/
+.venv/
+typings/
+venv/
