@@ -8,6 +8,7 @@ name: Check URLs with Lychee
       - '**.nix'
       - .github/workflows/link-checker.yaml
       - flake.lock
+      - lychee.toml
   push:
     branches: [main]
     paths:
@@ -15,6 +16,7 @@ name: Check URLs with Lychee
       - '**.nix'
       - .github/workflows/link-checker.yaml
       - flake.lock
+      - lychee.toml
   schedule:
     # Run once a month on the 14th.
     - cron: "0 0 14 * *"
@@ -43,5 +45,5 @@ jobs:
         uses: actions/cache/save@v4
         if: always()
         with:
-          key: lychee-ccache
+          key: lychee-cache
           path: .lycheecache

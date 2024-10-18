@@ -3,7 +3,7 @@ accept = [429]
 
 cache = true
 exclude = [
-  # Raspberry Pi's website returns 403 forbidden codes.
+  # Raspberry Pi's website returns 403 forbidden codes for GitHub runners.
   '^https://www.raspberrypi.com',
 ]
 max_cache_age = "2w"
