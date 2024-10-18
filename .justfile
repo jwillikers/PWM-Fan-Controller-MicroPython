@@ -50,15 +50,9 @@ run command='exec "import main"' device="":
 sync:
     source .venv/bin/activate && pip-sync --python-executable .venv/bin/python requirements-dev.txt
 
-alias t := test
-
-test:
-    nu update-nix-direnv-tests.nu
-
 alias u := update
 alias up := update
 
 update:
     nix flake update
-    nu update-nix-direnv.nu
     source .venv/bin/activate && pip-compile requirements-dev.in

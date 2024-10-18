@@ -1,6 +1,7 @@
 {
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";
+    nix-update-scripts.url = "github:jwillikers/nix-update-scripts";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -14,6 +15,7 @@
     {
       # deadnix: skip
       self,
+      nix-update-scripts,
       nixpkgs,
       flake-utils,
       pre-commit-hooks,
@@ -190,6 +192,7 @@
           pwm-fan-controller = callPackage ./default.nix { };
         };
         apps = {
+          inherit (nix-update-scripts.apps.${system}) update-nix-direnv;
           install = {
             micropython =
               let
