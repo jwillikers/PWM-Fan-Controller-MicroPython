@@ -5,6 +5,7 @@ name: Check Nix Flake
     paths:
       - .github/workflows/flake-checker.yaml
       - flake.lock
+      - '**.nix'
 
 jobs:
   flake-checker:

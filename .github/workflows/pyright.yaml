@@ -3,11 +3,12 @@ name: Pyright
   pull_request:
     branches: ["main"]
     paths:
+      - '**.nix'
+      - '**.py'
       - .github/workflows/pyright.yaml
       - flake.lock
       - pyproject.toml
       - requirements-dev.txt
-      - '**.py'
 
 jobs:
   pyright:

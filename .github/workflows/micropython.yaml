@@ -4,15 +4,15 @@ name: MicroPython
   pull_request:
     branches: ["main"]
     paths:
+      - '**.nix'
       - .github/workflows/micropython.yaml
       - flake.lock
-      - flake.nix
   push:
     branches: ["main"]
     paths:
+      - '**.nix'
       - .github/workflows/micropython.yaml
       - flake.lock
-      - flake.nix
   workflow_dispatch:
 
 jobs:
