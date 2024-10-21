@@ -50,23 +50,6 @@
         pkgs = import nixpkgs {
           inherit system overlays;
         };
-        nativeBuildInputs = with pkgs; [
-          asciidoctor
-          fish
-          just
-          lychee
-          micropython
-          nil
-          nushell
-          # todo Should everything be pulled in via Nix or pip-tools?
-          # mpremote
-          python3Packages.python
-          python3Packages.pip-tools
-          python3Packages.venvShellHook
-        ];
-        buildInputs =
-          [
-          ];
         treefmt.config = {
           programs = {
             actionlint.enable = true;
@@ -164,33 +147,6 @@
       in
       with pkgs;
       {
-        devShells.default = mkShell {
-          inherit buildInputs;
-          nativeBuildInputs =
-            nativeBuildInputs
-            ++ [
-              treefmtEval.config.build.wrapper
-              # Make formatters available for IDE's.
-              (lib.attrValues treefmtEval.config.build.programs)
-            ]
-            ++ pre-commit.enabledPackages;
-          venvDir = "./.venv";
-          postVenvCreation = ''
-            pip-sync --python-executable .venv/bin/python requirements-dev.txt
-          '';
-          # https://github.com/NixOS/nixpkgs/issues/223151
-          postShellHook =
-            ''
-              export LC_ALL="C.UTF-8";
-              pip-sync --python-executable .venv/bin/python requirements-dev.txt
-            ''
-            + pre-commit.shellHook;
-        };
-        packages = {
-          default = pkgs.micropython;
-          inherit (pkgs) micropython;
-          pwm-fan-controller = callPackage ./default.nix { };
-        };
         apps = {
           inherit (nix-update-scripts.apps.${system}) update-nix-direnv;
           install = {
@@ -233,6 +189,44 @@
               };
           };
           default = self.apps.${system}.install.pwm-fan-controller;
+        };
+        devShells.default = mkShell {
+          nativeBuildInputs =
+            with pkgs;
+            [
+              asciidoctor
+              fish
+              just
+              lychee
+              micropython
+              nil
+              nushell
+              # todo Should everything be pulled in via Nix or pip-tools?
+              # mpremote
+              python3Packages.python
+              python3Packages.pip-tools
+              python3Packages.venvShellHook
+              treefmtEval.config.build.wrapper
+              # Make formatters available for IDE's.
+              (lib.attrValues treefmtEval.config.build.programs)
+            ]
+            ++ pre-commit.enabledPackages;
+          venvDir = "./.venv";
+          postVenvCreation = ''
+            pip-sync --python-executable .venv/bin/python requirements-dev.txt
+          '';
+          # https://github.com/NixOS/nixpkgs/issues/223151
+          postShellHook =
+            ''
+              export LC_ALL="C.UTF-8";
+              pip-sync --python-executable .venv/bin/python requirements-dev.txt
+            ''
+            + pre-commit.shellHook;
+        };
+        packages = {
+          default = pkgs.micropython;
+          inherit (pkgs) micropython;
+          pwm-fan-controller = callPackage ./default.nix { };
         };
         formatter = treefmtEval.config.build.wrapper;
       }
