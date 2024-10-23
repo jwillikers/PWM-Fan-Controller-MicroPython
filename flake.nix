@@ -154,7 +154,6 @@
               let
                 script = pkgs.writeShellApplication {
                   name = "install-micropython";
-                  runtimeInputs = with pkgs; [ micropython ];
                   text = ''
                     cp ${pkgs.micropython}/bin/RPI_PICO.uf2 "/run/media/$(id --name --user)/RPI-RP2/"
                   '';
@@ -168,7 +167,6 @@
               let
                 script = pkgs.writeShellApplication {
                   name = "install-pwm-fan-controller";
-                  runtimeInputs = with pkgs; [ mpremote ];
                   text = ''
                     set -euxo pipefail
                     tty=$(${pkgs.mpremote}/bin/mpremote devs \
