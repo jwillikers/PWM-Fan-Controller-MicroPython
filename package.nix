@@ -7,8 +7,6 @@ stdenv.mkDerivation {
 
   src = ./.;
 
-  nativeBuildInputs = [ ];
-
   installPhase = ''
     mkdir --parents $out/bin
     mv main.py $out/bin/main.py
