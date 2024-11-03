@@ -1,10 +1,13 @@
 _: [
+  # Build MicroPython for the rp2-pico
   (_self: super: {
-    # Build MicroPython for the rp2-pico
     micropython = super.micropython.overrideAttrs (prevAttrs: {
       nativeBuildInputs = prevAttrs.nativeBuildInputs ++ [
         super.cmake
         super.gcc-arm-embedded
+      ];
+      buildInputs = prevAttrs.buildInputs ++ [
+        super.picotool
       ];
       dontUseCmakeConfigure = true;
       doCheck = false;
