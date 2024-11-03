@@ -30,7 +30,7 @@ install device="":
     fi
     .venv/bin/mpremote connect {{ if device == "" { "\"$port_option\"" } else { device } }} fs cp main.py :
 
-install-micropython file="RPI_PICO-20240602-v1.23.0.uf2":
+install-micropython file="RPI_PICO-20241025-v1.24.0.uf2":
     curl --location \
         --output-dir /run/media/$(id --name --user)/RPI-RP2 \
         --remote-name "https://micropython.org/resources/firmware/{{ file }}"
