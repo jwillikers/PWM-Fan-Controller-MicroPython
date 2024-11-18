@@ -94,7 +94,6 @@
               just
               lychee
               micropython
-              nil
               nushell
               # todo Migrate everything over to Nix eventually.
               # mpremote
