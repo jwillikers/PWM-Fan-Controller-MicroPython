@@ -23,7 +23,8 @@
     editorconfig-checker.enable = true;
     end-of-file-fixer.enable = true;
     fix-byte-order-marker.enable = true;
-    flake-checker.enable = true;
+    # todo Broken for 24.11 branch
+    # flake-checker.enable = true;
     forbid-new-submodules.enable = true;
     # todo Enable lychee when asciidoc is supported.
     # See https://github.com/lycheeverse/lychee/issues/291
