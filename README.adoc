@@ -286,14 +286,14 @@ There are a couple of Nix commands available for common tasks.
 +
 [,sh]
 ----
-nix run '.#micropython'
+nix run .#micropython
 ----
 
 . Install the fan controller firmware by running the `pwm-fan-controller` app output.
 +
 [,sh]
 ----
-nix run '.#pwm-fan-controller'
+nix run .#pwm-fan-controller
 ----
 
 ==== Virtual Environment
