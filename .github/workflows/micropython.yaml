@@ -23,7 +23,7 @@ jobs:
       - uses: DeterminateSystems/nix-installer-action@v16
       - uses: DeterminateSystems/magic-nix-cache-action@v8
       - name: Build
-        run: nix build '.#micropython'
+        run: nix build .#micropython
       - name: Upload MicroPython
         uses: actions/upload-artifact@v4
         with:

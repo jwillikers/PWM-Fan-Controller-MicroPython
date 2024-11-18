@@ -1,5 +1,4 @@
 {
-  "asciidoc.antora.enableAntoraSupport": false,
   "cSpell.words": [
     "Adafruit",
     "adoc",
@@ -32,6 +31,7 @@
     "MOSI",
     "mpremote",
     "mypy",
+    "nixos",
     "Noctua",
     "Optimziations",
     "ostree",
@@ -53,6 +53,14 @@
     "venv",
     "xhci"
   ],
+  "files.watcherExclude": {
+    "**/.direnv/**": true,
+    ".lycheecache": true,
+    ".pre-commit-config.yaml": true,
+    "**/result": true,
+    "**/result/**": true,
+    "**/target/**": true
+  },
   "nix.enableLanguageServer": true,
   "nix.serverPath": "nil"
 }

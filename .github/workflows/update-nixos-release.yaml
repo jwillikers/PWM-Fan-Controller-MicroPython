@@ -1,8 +1,8 @@
-name: Update nix-direnv
+name: Update NixOS Release
 
 "on":
   schedule:
-    - cron: "0 0 16 * *"
+    - cron: "0 0 15 6,12 *"
   workflow_dispatch:
 
 permissions:
@@ -10,19 +10,23 @@ permissions:
   pull-requests: write
 
 jobs:
-  update-nix-direnv:
+  update-nixos-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: DeterminateSystems/nix-installer-action@v16
       - uses: DeterminateSystems/magic-nix-cache-action@v8
-      - name: Update nix-direnv to the latest version
-        run: nix run .#update-nix-direnv
+      - name: Update the NixOS release in flake.nix to the latest
+        run: |
+          nix run .#update-nixos-release
+          if [[ -n $(git status --porcelain=2) ]]; then
+            nix flake update
+          fi
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
           assignees: ${{ github.repository_owner }}
-          branch: "update/nix-direnv"
-          commit-message: "chore(deps): Update nix-direnv"
-          title: "chore(deps): Update nix-direnv"
+          branch: "update/nixos"
+          commit-message: "chore(deps): Update NixOS release"
+          title: "chore(deps): Update NixOS release"
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}

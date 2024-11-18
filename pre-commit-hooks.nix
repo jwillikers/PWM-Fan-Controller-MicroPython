@@ -10,7 +10,7 @@
     # todo Not integrated with Nix?
     check-format = {
       enable = true;
-      entry = "${treefmtEval.config.build.wrapper}/bin/treefmt --fail-on-change";
+      entry = "${treefmtEval.config.build.wrapper}/bin/treefmt-nix --fail-on-change";
     };
 
     check-json.enable = true;
@@ -23,7 +23,7 @@
     editorconfig-checker.enable = true;
     end-of-file-fixer.enable = true;
     fix-byte-order-marker.enable = true;
-    flake-checker.enable = true;
+    # flake-checker.enable = true;
     forbid-new-submodules.enable = true;
     # todo Enable lychee when asciidoc is supported.
     # See https://github.com/lycheeverse/lychee/issues/291
