@@ -48,7 +48,7 @@
       with pkgs;
       {
         apps = {
-          inherit (nix-update-scripts.apps.${system}) update-nix-direnv;
+          inherit (nix-update-scripts.apps.${system}) update-nix-direnv update-nixos-release;
           install = {
             micropython = {
               type = "app";
