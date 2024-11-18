@@ -10,7 +10,7 @@
     # todo Not integrated with Nix?
     check-format = {
       enable = true;
-      entry = "${treefmtEval.config.build.wrapper}/bin/treefmt --fail-on-change";
+      entry = "${pkgs.lib.getExe treefmtEval.config.build.wrapper} --fail-on-change";
     };
 
     check-json.enable = true;
