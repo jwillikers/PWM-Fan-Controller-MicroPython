@@ -8,6 +8,7 @@ check: && format
     pyright --warnings
     asciidoctor **/*.adoc
     lychee --cache **/*.html
+    nix flake check
 
 alias f := format
 alias fmt := format
@@ -21,15 +22,28 @@ init-dev: && sync
     .venv/bin/python -m pip install --requirement requirements-dev.txt
 
 install device="":
-    #!/usr/bin/env sh
-    set -euxo pipefail
-    tty=$(.venv/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-    port_option=""
-    if [ -n "${tty+x}" ]; then
-        port_option="port:$tty"
-    fi
-    .venv/bin/mpremote connect {{ if device == "" { "\"$port_option\"" } else { device } }} fs cp main.py :
+    #!/usr/bin/env nu
+    let serial_device = (
+        if ( "{{ device }}" | is-empty) {(
+            ^.venv/bin/mpremote devs |
+            parse '{device} {serial_number} {vendor_id}:{product_id} {description}' |
+            where description == "MicroPython Board in FS mode" |
+            get device |
+            first
+        )} else {
+            "{{ device }}"
+        }
+    )
+    let port_option = (
+        if not ($serial_device | is-empty) {
+            $"port:($serial_device)"
+        } else {
+            ""
+        }
+    )
+    ^.venv/bin/mpremote connect $port_option fs cp main.py :
 
+# todo Automate updating this.
 install-micropython file="RPI_PICO-20241025-v1.24.0.uf2":
     curl --location \
         --output-dir /run/media/$(id --name --user)/RPI-RP2 \
@@ -38,14 +52,26 @@ install-micropython file="RPI_PICO-20241025-v1.24.0.uf2":
 # Mount the local repository on the device and execute commands.
 # By default, the main.py file is executed on the device.
 run command='exec "import main"' device="":
-    #!/usr/bin/env sh
-    set -euxo pipefail
-    tty=$(.venv/bin/mpremote devs | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-    port_option=""
-    if [ -n "${tty+x}" ]; then
-        port_option="port:$tty"
-    fi
-    .venv/bin/mpremote connect {{ if device == "" { "\"$port_option\"" } else { device } }} mount . {{ command }}
+    #!/usr/bin/env nu
+    let serial_device = (
+        if ( "{{ device }}" | is-empty) {(
+            ^.venv/bin/mpremote devs |
+            parse '{device} {serial_number} {vendor_id}:{product_id} {description}' |
+            where description == "MicroPython Board in FS mode" |
+            get device |
+            first
+        )} else {
+            "{{ device }}"
+        }
+    )
+    let port_option = (
+        if not ($serial_device | is-empty) {
+            $"port:($serial_device)"
+        } else {
+            ""
+        }
+    )
+    ^.venv/bin/mpremote connect $port_option mount . {{ command }}
 
 sync:
     source .venv/bin/activate && pip-sync --python-executable .venv/bin/python requirements-dev.txt

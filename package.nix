@@ -1,7 +1,7 @@
 {
-  stdenv,
+  stdenvNoCC,
 }:
-stdenv.mkDerivation {
+stdenvNoCC.mkDerivation {
   pname = "pwm-fan-controller-micropython";
   version = "0.2.0";
 
@@ -9,8 +9,7 @@ stdenv.mkDerivation {
 
   installPhase = ''
     runHook preInstall
-    mkdir --parents $out/bin
-    mv main.py $out/bin/main.py
+    install -D --mode=0644 --target-directory=$out/bin main.py
     runHook postInstall
   '';
 }

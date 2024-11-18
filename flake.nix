@@ -51,41 +51,38 @@
         apps = {
           inherit (nix-update-scripts.apps.${system}) update-nix-direnv;
           install = {
-            micropython =
-              let
-                script = pkgs.writeShellApplication {
-                  name = "install-micropython";
-                  text = ''
-                    cp ${pkgs.micropython}/bin/RPI_PICO.uf2 "/run/media/$(id --name --user)/RPI-RP2/"
-                  '';
-                };
-              in
-              {
-                type = "app";
-                program = "${script}/bin/install-micropython";
-              };
-            pwm-fan-controller =
-              let
-                script = pkgs.writeShellApplication {
-                  name = "install-pwm-fan-controller";
-                  text = ''
-                    set -euxo pipefail
-                    tty=$(${pkgs.mpremote}/bin/mpremote devs \
-                      | awk -F' ' '/MicroPython Board in FS mode/ {print $1; exit;}')
-                    port_option=""
-                    if [ -n "''${tty+x}" ]; then
-                      port_option="port:$tty"
-                    fi
-                    ${pkgs.mpremote}/bin/mpremote connect "$port_option" fs cp ${
-                      self.packages.${system}.pwm-fan-controller
-                    }/bin/main.py :
-                  '';
-                };
-              in
-              {
-                type = "app";
-                program = "${script}/bin/install-pwm-fan-controller";
-              };
+            micropython = {
+              type = "app";
+              program = builtins.toString (
+                pkgs.writers.writeNu "install-micropython" ''
+                  cp ${pkgs.micropython}/bin/RPI_PICO.uf2 (["/run/media/" (^id --name --user) "RPI-RP2"] | path join)
+                ''
+              );
+            };
+            pwm-fan-controller = {
+              type = "app";
+              program = builtins.toString (
+                pkgs.writers.writeNu "install-pwm-fan-controller" ''
+                  let serial_device = (
+                    ^${pkgs.lib.getExe mpremote} devs |
+                    parse '{device} {serial_number} {vendor_id}:{product_id} {description}' |
+                    where description == "MicroPython Board in FS mode" |
+                    get device |
+                    first
+                  )
+                  let port_option = (
+                    if not ($serial_device | is-empty) {
+                      $"port:($serial_device)"
+                    } else {
+                      ""
+                    }
+                  )
+                  ^${pkgs.lib.getExe mpremote} connect $port_option fs cp ${
+                    self.packages.${system}.pwm-fan-controller
+                  }/bin/main.py :
+                ''
+              );
+            };
           };
           default = self.apps.${system}.install.pwm-fan-controller;
         };
@@ -100,7 +97,7 @@
               micropython
               nil
               nushell
-              # todo Should everything be pulled in via Nix or pip-tools?
+              # todo Migrate everything over to Nix eventually.
               # mpremote
               python3Packages.python
               python3Packages.pip-tools
