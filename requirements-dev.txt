@@ -20,9 +20,9 @@ micropython-stdlib-stubs==1.24.0 \
     --hash=sha256:36af8fb242d211a21df12735bdb8cd1ef472e3582a75dba6e2b1f93529915861 \
     --hash=sha256:caa1c86b4410453eb8661b53b4a51f8f848f83e1b5dec8223c0f1b455961bdeb
     # via micropython-rp2-pico-stubs
-mpremote==1.24.0 \
-    --hash=sha256:407561833b8d763e9f2f35823ef3d8276fe7b723b9abf7eb0a1461f452ce0911 \
-    --hash=sha256:c8815edfdcb0bbdf86ff892ec194c66c7069e6a4e676540277beafa8e9ade6a0
+mpremote==1.24.1 \
+    --hash=sha256:1a3c16d255748cfe54d4a897908651fc8286233173f7c7b2a0e56ae4b9fa940e \
+    --hash=sha256:d3ae3d0a0ae7713c537be2b6afadd11c7cde5f1750ea1260f6667bb80071b15b
     # via -r requirements-dev.in
 packaging==24.2 \
     --hash=sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759 \
@@ -42,9 +42,9 @@ pyserial==3.5 \
     --hash=sha256:3c77e014170dfffbd816e6ffc205e9842efb10be9f58ec16d3e8675b4925cddb \
     --hash=sha256:c4451db6ba391ca6ca299fb3ec7bae67a5c55dde170964c7a14ceefec02f2cf0
     # via mpremote
-wheel==0.45.0 \
-    --hash=sha256:52f0baa5e6522155090a09c6bd95718cc46956d1b51d537ea5454249edb671c7 \
-    --hash=sha256:a57353941a3183b3d5365346b567a260a0602a0f8a635926a7dede41b94c674a
+wheel==0.45.1 \
+    --hash=sha256:661e1abd9198507b1409a20c02106d9670b2576e916d58f520316666abca6729 \
+    --hash=sha256:708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
@@ -52,7 +52,7 @@ pip==24.3.1 \
     --hash=sha256:3790624780082365f47549d032f3770eeb2b1e8bd1f7b2e02dace1afa361b4ed \
     --hash=sha256:ebcb60557f2aefabc2e0f918751cd24ea0d56d8ec5445fe1807f1d2109660b99
     # via pip-tools
-setuptools==75.5.0 \
-    --hash=sha256:5c4ccb41111392671f02bb5f8436dfc5a9a7185e80500531b133f5775c4163ef \
-    --hash=sha256:87cb777c3b96d638ca02031192d40390e0ad97737e27b6b4fa831bea86f2f829
+setuptools==75.6.0 \
+    --hash=sha256:8199222558df7c86216af4f84c30e9b34a61d8ba19366cc914424cdbd28252f6 \
+    --hash=sha256:ce74b49e8f7110f9bf04883b730f4765b774ef3ef28f722cce7c273d253aaf7d
     # via pip-tools
