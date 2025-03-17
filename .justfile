@@ -50,6 +50,7 @@ install-micropython file="RPI_PICO-20241025-v1.24.0.uf2":
         --remote-name "https://micropython.org/resources/firmware/{{ file }}"
 
 # Mount the local repository on the device and execute commands.
+
 # By default, the main.py file is executed on the device.
 run command='exec "import main"' device="":
     #!/usr/bin/env nu
