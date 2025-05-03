@@ -16,17 +16,16 @@ micropython-rp2-pico-stubs==1.20.0.post5 \
     --hash=sha256:57d64f3db9d1d2e1150983c4c719ea521644367283072146b06dcd15d783dfc1 \
     --hash=sha256:aba78deb37e696b30744201da7435daa8363e24834750a8bb711b60c843391e8
     # via -r requirements-dev.in
-micropython-stdlib-stubs==1.24.1 \
-    --hash=sha256:8e1ab07c34b7fe219a63918c4601bb0a90498c95cbd12038b7088c8359c3f521 \
-    --hash=sha256:ca1442aaec47461cef08416824b73e3a9167ab79f36eaa86b6ca053d2bc65d45
+micropython-stdlib-stubs==1.24.1.post2 \
+    --hash=sha256:1ef3b2cf4f84cd8a96bf05184c09498a246b87435bcea0235f3b49861a1d1cd1
     # via micropython-rp2-pico-stubs
-mpremote==1.24.1 \
-    --hash=sha256:1a3c16d255748cfe54d4a897908651fc8286233173f7c7b2a0e56ae4b9fa940e \
-    --hash=sha256:d3ae3d0a0ae7713c537be2b6afadd11c7cde5f1750ea1260f6667bb80071b15b
+mpremote==1.25.0 \
+    --hash=sha256:42691ff8f7ea4b5f2fc1b51de99609995d383671a4b4d4daad8cbd486d26aa23 \
+    --hash=sha256:d0dcd8ab364d87270e1766308882e536e541052efd64aadaac83bc7ebbea2815
     # via -r requirements-dev.in
-packaging==24.2 \
-    --hash=sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759 \
-    --hash=sha256:c228a6dc5e932d346bc5739379109d49e8853dd8223571c7c5b55260edc0b97f
+packaging==25.0 \
+    --hash=sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484 \
+    --hash=sha256:d443872c98d677bf60f6a1f2f8c1cb748e8fe762d2bf9d3148b5599295b0fc4f
     # via build
 pip-tools==7.4.1 \
     --hash=sha256:4c690e5fbae2f21e87843e89c26191f0d9454f362d8acdbd695716493ec8b3a9 \
@@ -48,11 +47,11 @@ wheel==0.45.1 \
     # via pip-tools
 
 # The following packages are considered to be unsafe in a requirements file:
-pip==25.0.1 \
-    --hash=sha256:88f96547ea48b940a3a385494e181e29fb8637898f88d88737c5049780f196ea \
-    --hash=sha256:c46efd13b6aa8279f33f2864459c8ce587ea6a1a59ee20de055868d8f7688f7f
+pip==25.1.1 \
+    --hash=sha256:2913a38a2abf4ea6b64ab507bd9e967f3b53dc1ede74b01b0931e1ce548751af \
+    --hash=sha256:3de45d411d308d5054c2168185d8da7f9a2cd753dbac8acbfa88a8909ecd9077
     # via pip-tools
-setuptools==75.8.2 \
-    --hash=sha256:4880473a969e5f23f2a2be3646b2dfd84af9028716d398e46192f84bc36900d2 \
-    --hash=sha256:558e47c15f1811c1fa7adbd0096669bf76c1d3f433f58324df69f3f5ecac4e8f
+setuptools==80.1.0 \
+    --hash=sha256:2e308396e1d83de287ada2c2fd6e64286008fe6aca5008e0b6a8cb0e2c86eedd \
+    --hash=sha256:ea0e7655c05b74819f82e76e11a85b31779fee7c4969e82f72bab0664e8317e4
     # via pip-tools
