@@ -21,6 +21,7 @@ repository:
   has_downloads: false
   # Updates the default branch for this repository.
   default_branch: main
+  allow_auto_merge: true
   # Either `true` to allow squash-merging pull requests, or `false` to prevent
   # squash-merging.
   allow_squash_merge: true
