@@ -16,12 +16,12 @@ micropython-rp2-pico-stubs==1.20.0.post5 \
     --hash=sha256:57d64f3db9d1d2e1150983c4c719ea521644367283072146b06dcd15d783dfc1 \
     --hash=sha256:aba78deb37e696b30744201da7435daa8363e24834750a8bb711b60c843391e8
     # via -r requirements-dev.in
-micropython-stdlib-stubs==1.25.0 \
-    --hash=sha256:5b1faecff10f85d1cd812c13e183eb9cd99238f01af7d829995eece4c4450b3f
+micropython-stdlib-stubs==1.26.0.post3 \
+    --hash=sha256:98a35a1faffeca605a0d38988dd0d98a117c32193db758436c87a08ca278339d
     # via micropython-rp2-pico-stubs
-mpremote==1.25.0 \
-    --hash=sha256:42691ff8f7ea4b5f2fc1b51de99609995d383671a4b4d4daad8cbd486d26aa23 \
-    --hash=sha256:d0dcd8ab364d87270e1766308882e536e541052efd64aadaac83bc7ebbea2815
+mpremote==1.26.0 \
+    --hash=sha256:7f347318fb6d3bb8f89401d399a05efba39b51c74f747cebe92d3c6a9a4ee0b4 \
+    --hash=sha256:daed9b795fdf98edb0c9c4f7f892bf66f075ec5e728bdcc4ab0915abf23d5d17
     # via -r requirements-dev.in
 packaging==25.0 \
     --hash=sha256:29572ef2b1f17581046b3a2227d5c611fb25ec70ca1ba8554b24b0e69331a484 \
@@ -31,6 +31,10 @@ pip-tools==7.5.0 \
     --hash=sha256:30639f50961bb09f49d22f4389e8d7d990709677c094ce1114186b1f2e9b5821 \
     --hash=sha256:69758e4e5a65f160e315d74db46246fdbb30d549f1ed0c4236d057122c9b0f18
     # via -r requirements-dev.in
+platformdirs==4.4.0 \
+    --hash=sha256:abd01743f24e5287cd7a5db3752faf1a2d65353f38ec26d98e25a6db65958c85 \
+    --hash=sha256:ca753cf4d81dc309bc67b0ea38fd15dc97bc30ce419a7f58d13eb3bf14c4febf
+    # via mpremote
 pyproject-hooks==1.2.0 \
     --hash=sha256:1e859bd5c40fae9448642dd871adf459e5e2084186e8d2c2a79a824c970da1f8 \
     --hash=sha256:9e5c6bfa8dcc30091c74b0cf803c81fdd29d94f01992a7707bc97babb1141913
