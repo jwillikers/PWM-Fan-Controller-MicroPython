@@ -2,19 +2,6 @@ name: Check files with treefmt
 "on":
   pull_request:
     branches: ["main"]
-    paths:
-      - '**.json'
-      - '**.just'
-      - '**.json'
-      - '**.nix'
-      - '**.py'
-      - '**.toml'
-      - '**.yaml'
-      - '**.yml'
-      - '**/.justfile'
-      - '**/justfile'
-      - .github/workflows/treefmt.yaml
-      - flake.lock
   push:
     branches: ["main"]
     paths:
@@ -31,20 +18,52 @@ name: Check files with treefmt
       - .github/workflows/treefmt.yaml
       - flake.lock
 
+permissions:
+  contents: read
+  pull-requests: read
+
 jobs:
   treefmt:
     runs-on: ubuntu-latest
     steps:
+      # Always run this job so that required status checks report on every PR,
+      # but only do the work when relevant files changed.
+      - uses: dorny/paths-filter@v4
+        id: filter
+        if: github.event_name == 'pull_request'
+        with:
+          filters: |
+            relevant:
+              - '**.json'
+              - '**.just'
+              - '**.json'
+              - '**.nix'
+              - '**.py'
+              - '**.toml'
+              - '**.yaml'
+              - '**.yml'
+              - '**/.justfile'
+              - '**/justfile'
+              - .github/workflows/treefmt.yaml
+              - flake.lock
+      - name: Determine whether to run
+        id: gate
+        run: echo "run=${{ github.event_name != 'pull_request' || steps.filter.outputs.relevant == 'true' }}" >> "$GITHUB_OUTPUT"
       - uses: actions/checkout@v7
+        if: steps.gate.outputs.run == 'true'
       - uses: DeterminateSystems/nix-installer-action@v23
+        if: steps.gate.outputs.run == 'true'
       - name: Cache Python virtual environment
+        if: steps.gate.outputs.run == 'true'
         uses: actions/cache@v6
         with:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv
       - name: Run treefmt
+        if: steps.gate.outputs.run == 'true'
         run: nix develop --command treefmt --ci
       - uses: reviewdog/action-suggester@v1
+        if: steps.gate.outputs.run == 'true'
         with:
           fail_on_error: true
           github_token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
