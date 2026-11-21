@@ -22,6 +22,7 @@ jobs:
             nix flake update
           fi
       - name: Create Pull Request
+        id: cpr
         uses: peter-evans/create-pull-request@v8
         with:
           assignees: ${{ github.repository_owner }}
@@ -29,3 +30,9 @@ jobs:
           commit-message: "chore(deps): Update NixOS release"
           title: "chore(deps): Update NixOS release"
           token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
+      - name: Enable auto-merge
+        if: steps.cpr.outputs.pull-request-number
+        # Use the PAT so that the merge triggers the push workflows on main.
+        run: gh pr merge --auto --merge "${{ steps.cpr.outputs.pull-request-number }}"
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
