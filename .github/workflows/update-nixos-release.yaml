@@ -13,8 +13,8 @@ jobs:
   update-nixos-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v23
       - name: Update the NixOS release in flake.nix to the latest
         run: |
           nix run .#update-nixos-release
@@ -22,7 +22,7 @@ jobs:
             nix flake update
           fi
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           assignees: ${{ github.repository_owner }}
           branch: "update/nixos"

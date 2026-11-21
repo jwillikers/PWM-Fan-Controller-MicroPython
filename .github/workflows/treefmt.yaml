@@ -35,10 +35,10 @@ jobs:
   treefmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v19
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v23
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv

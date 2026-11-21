@@ -17,5 +17,5 @@ jobs:
   flake-checker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/flake-checker-action@v9
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/flake-checker-action@v14
