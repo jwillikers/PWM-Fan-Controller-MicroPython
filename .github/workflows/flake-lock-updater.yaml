@@ -11,11 +11,11 @@ jobs:
     name: Flake Lock Updater
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
-      - uses: DeterminateSystems/nix-installer-action@v16
-      - uses: DeterminateSystems/update-flake-lock@v24
+      - uses: DeterminateSystems/nix-installer-action@v23
+      - uses: DeterminateSystems/update-flake-lock@v29
         with:
           pr-assignees: ${{ github.repository_owner }}
           pr-labels: |

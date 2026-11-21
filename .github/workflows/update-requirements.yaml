@@ -14,17 +14,17 @@ jobs:
   update-requirements:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v16
+      - uses: actions/checkout@v7
+      - uses: DeterminateSystems/nix-installer-action@v23
       - name: Cache Python virtual environment
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           key: venv-${{ runner.os }}-${{ hashFiles('flake.lock') }}-${{ hashFiles('requirements-dev.txt') }}
           path: .venv
       - name: Update Python dependencies in requirements-dev.txt
         run: nix develop --command pip-compile requirements-dev.in
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           assignees: ${{ github.repository_owner }}
           branch: "update/requirements"
